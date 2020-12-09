@@ -1,7 +1,12 @@
-//import request from '@/utils/request'
+import request from '@/utils/request'
 
+// import axios from '@/utils/request'
 export function login(data) {
-
+    return request({
+        method: 'post',
+        url: '/api/sys/login',
+        data
+    })
 }
 
 export function getInfo(token) {
