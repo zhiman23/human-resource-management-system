@@ -10,7 +10,7 @@
     >
       <div class="title-container">
         <h3 class="title">
-          <img src="@/assets/common/login-logo.png" alt="" />
+          <img src="@/assets/common/login-logo.png" alt="">
         </h3>
       </div>
 
@@ -57,8 +57,7 @@
         type="primary"
         style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="handleLogin"
-        >登录{{ $store.state.user.token }}</el-button>
-      
+      >登录</el-button>
 
       <div class="tips">
         <span style="margin-right: 20px">账号: 13800000002</span>
@@ -69,94 +68,78 @@
 </template>
 
 <script>
-import { validMobile, validPassword } from "@/utils/validate";
+import { validMobile, validPassword } from '@/utils/validate'
 
-import { login } from "@/api/user";
+// import { login } from '@/api/user'
 // import { setToken } from "@/utils/auth";
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     const validateMobile = (rule, value, callback) => {
       // 根据校验结果进行处理
-      validMobile(value) ? callback() : callback(new Error("手机号不合法"));
-    };
+      validMobile(value) ? callback() : callback(new Error('手机号不合法'))
+    }
     const validatePassword = (rule, value, callback) => {
       validPassword(value)
         ? callback()
-        : callback(new Error("密码必须是6到16位之间"));
-    };
+        : callback(new Error('密码必须是6到16位之间'))
+    }
     return {
       loginForm: {
-        mobile: "13800000002",
-        password: "123456",
+        mobile: '13800000002',
+        password: '123456'
       },
       loginRules: {
         mobile: [
-          { required: true, trigger: "blur", message: "手机号不能为空" },
-          { trigger: "blur", validator: validateMobile },
+          { required: true, trigger: 'blur', message: '手机号不能为空' },
+          { trigger: 'blur', validator: validateMobile }
         ],
         password: [
-          { required: true, trigger: "blur", message: "请输入密码" },
-          { trigger: "blur", validator: validatePassword },
-        ],
+          { required: true, trigger: 'blur', message: '请输入密码' },
+          { trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
-      passwordType: "password",
-      redirect: undefined,
-    };
+      passwordType: 'password',
+      redirect: undefined
+    }
   },
   watch: {
     $route: {
-      handler: function (route) {
-        this.redirect = route.query && route.query.redirect;
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   methods: {
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     handleLogin() {
-      login(this.loginForm).then((res) => {
-        console.log(res.data);
-        const { data, message, success } = res.data;
-        if (success) {
-          // 弹窗提醒登录成功
-          this.$message.success(message);
-          console.log("token=" + data);
-          this.$store.commit('user/setToken', data);
-        }
-      });
-
-      // this.$refs.loginForm.validate((valid) => {
-      //   if (valid) {
-      //     this.loading = true;
-      //     this.$store
-      //       .dispatch("user/login", this.loginForm)
-      //       .then(() => {
-      //         this.$router.push({ path: this.redirect || "/" });
-      //         this.loading = false;
-      //       })
-      //       .catch(() => {
-      //         this.loading = false;
-      //       });
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // });
-    },
-  },
-};
+      this.loading = true
+      this.$store
+        .dispatch('user/login', this.loginForm)
+        .then(() => {
+          this.$router.push('/')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    }
+  }
+}
 </script>
 
 <style lang="scss">
@@ -164,7 +147,7 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg: #283443;
-$light_gray: #68b0fe;
+  $light_gray: #68b0fe;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
