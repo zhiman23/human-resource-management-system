@@ -1,5 +1,5 @@
 import { setToken, getToken } from '@/utils/auth'
-import { login as loginRequest, getUserInfo as userInfoRequest } from '@/api/user'
+import { login, getUserInfo, getUserDetailById } from '@/api/user'
 import { Message } from 'element-ui'
 
 export default {
@@ -23,16 +23,29 @@ export default {
   actions: {
     // 'login': function() {
     login(context, data) {
-      return loginRequest(data).then(data => {
+      return login(data).then(data => {
         Message.success('登录成功')
         context.commit('setToken', data)
       })
     },
-    getUserInfo(context) {
-      return userInfoRequest().then(data => [
-        context.commit('setUserInfo', data)
-      ])
+    // 发请求
+    // getUserInfo 是个对象，所以括起来,async await
+    'getUserInfo': async(context) => {
+      // 发请求,
+      const dataUserInfo = await getUserInfo()
+      const dataUserDetail = await getUserDetailById(dataUserInfo.userId)
+      const userInfo = {
+        ...dataUserInfo,
+        ...dataUserDetail
+      }
+      context.commit('setUserInfo', userInfo)
     }
+    // 'getUserInfo': (context) => {
+    //   return getUserInfo().then(data => {
+    //     console.log('数据')
+    //     context.commit('setUserInfo', data)
+    //   })
+    // }
   }
 }
 

@@ -16,6 +16,13 @@ export function getUserInfo(token) {
   })
 }
 
+// 获取头像id
+export function getUserDetailById(id) {
+  return request({
+    url: '/sys/user/' + id
+  })
+}
+
 export function logout() {
 
 }
