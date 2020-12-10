@@ -1,3 +1,28 @@
+import router from '@/router'
+import store from '@/store'
+// 路由守卫
+const whiteList = ['/login', '/404']
+
+router.beforeEach((to, from, next) => {
+  // 是否有token
+  if (store.getters.token) {
+    // 是否有登录页
+    if (to.path === '/login') {
+      // router.push('/')
+      return next('/')
+    } else {
+      return next()
+    }
+  } else {
+    // 是否在白名单
+    if (whiteList.indexOf(to.path) > -1) {
+      return next()
+    } else {
+      return next('/login')
+    }
+  }
+})
+
 // import router from './router'
 // import store from './store'
 // import { Message } from 'element-ui'
