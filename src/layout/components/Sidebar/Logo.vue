@@ -53,7 +53,7 @@ export default {
     & .sidebar-logo {
       // width: 32px;
       // height: 32px;
-      width:140px;
+      width: 140px;
       vertical-align: middle;
       margin-right: 12px;
     }
@@ -73,8 +73,9 @@ export default {
   &.collapse {
     .sidebar-logo {
       margin-right: 0px;
-      width:32px;
-      height:32px;
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
     }
   }
 }
