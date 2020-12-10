@@ -17,6 +17,10 @@ router.beforeEach((to, from, next) => {
       // router.push('/')
       next('/')
     } else {
+      // 判断vuex里面有没有数据
+      if (!store.getters.userId) {
+        store.dispatch('user/getUserInfo')
+      }
       next()
     }
   } else {

@@ -1,11 +1,12 @@
 import { setToken, getToken } from '@/utils/auth'
-import { login } from '@/api/user'
+import { login as loginRequest, getUserInfo as userInfoRequest } from '@/api/user'
 import { Message } from 'element-ui'
 
 export default {
   namespaced: true,
   state: {
-    token: getToken()
+    token: getToken(),
+    userInfo: {}
   },
   mutations: {
     // 修改 token 的 mutations
@@ -14,15 +15,23 @@ export default {
       state.token = data
       // 2. 引入了 utils 里面的小工具, 用来将token同时存放到 cookie (不方便使用, 但是可以持久化)
       setToken(data)
+    },
+    setUserInfo(state, data) {
+      state.userInfo = data
     }
   },
   actions: {
     // 'login': function() {
     login(context, data) {
-      return login(data).then(data => {
+      return loginRequest(data).then(data => {
         Message.success('登录成功')
         context.commit('setToken', data)
       })
+    },
+    getUserInfo(context) {
+      return userInfoRequest().then(data => [
+        context.commit('setUserInfo', data)
+      ])
     }
   }
 }
