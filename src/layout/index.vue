@@ -14,7 +14,7 @@
 <script>
 import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-
+import { getUserInfo } from '@/api/user'
 export default {
   name: 'Layout',
   components: {
@@ -41,6 +41,11 @@ export default {
         mobile: this.device === 'mobile'
       }
     }
+  },
+  created() {
+    getUserInfo().then(data => {
+      console.log(data)
+    })
   },
   methods: {
     handleClickOutside() {
