@@ -1,26 +1,36 @@
 import router from '@/router'
 import store from '@/store'
+// 引入进度条插件
+import NProgress from 'nprogress'
+// 引入进度条样式
+import 'nprogress/nprogress.css'
 // 路由守卫
 const whiteList = ['/login', '/404']
 
 router.beforeEach((to, from, next) => {
+  // 开启进度条
+  NProgress.start()
   // 是否有token
   if (store.getters.token) {
     // 是否有登录页
     if (to.path === '/login') {
       // router.push('/')
-      return next('/')
+      next('/')
     } else {
-      return next()
+      next()
     }
   } else {
     // 是否在白名单
     if (whiteList.indexOf(to.path) > -1) {
-      return next()
+      next()
     } else {
-      return next('/login')
+      next('/login')
     }
   }
+  NProgress.done()
+})
+router.afterEach(() => {
+  NProgress.done()
 })
 
 // import router from './router'
