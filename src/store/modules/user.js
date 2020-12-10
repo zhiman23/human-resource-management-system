@@ -1,7 +1,6 @@
-import { setToken,getToken } from '@/utils/auth'
+import { setToken, getToken } from '@/utils/auth'
 import { login } from '@/api/user'
 import { Message } from 'element-ui'
-
 
 export default {
   namespaced: true,
@@ -20,14 +19,9 @@ export default {
   actions: {
     // 'login': function() {
     login(context, data) {
-      login(data).then(res => {
-        const { data, message, success } = res.data
-        if (success) {
-          // 1. 弹窗
-          Message.success(message)
-          // 2. 调用 mutations
-          context.commit('setToken', data)
-        }
+      return login(data).then(data => {
+        Message.success('登录成功')
+        context.commit('setToken', data)
       })
     }
   }
