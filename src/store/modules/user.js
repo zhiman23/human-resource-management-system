@@ -1,4 +1,4 @@
-import { setToken, getToken } from '@/utils/auth'
+import { setToken, getToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 import { Message } from 'element-ui'
 
@@ -16,8 +16,15 @@ export default {
       // 2. 引入了 utils 里面的小工具, 用来将token同时存放到 cookie (不方便使用, 但是可以持久化)
       setToken(data)
     },
+    removeToken(state) {
+      state.token = ''
+      removeToken()
+    },
     setUserInfo(state, data) {
       state.userInfo = data
+    },
+    removeUserInfo(state) {
+      state.userInfo = {}
     }
   },
   actions: {
@@ -26,6 +33,7 @@ export default {
       return login(data).then(data => {
         Message.success('登录成功')
         context.commit('setToken', data)
+        setTimeStamp()
       })
     },
     // 发请求
@@ -39,13 +47,13 @@ export default {
         ...dataUserDetail
       }
       context.commit('setUserInfo', userInfo)
+    },
+    logout(context) {
+      const { commit } = context
+      commit('removeToken')
+      commit('removeUserInfo')
     }
-    // 'getUserInfo': (context) => {
-    //   return getUserInfo().then(data => {
-    //     console.log('数据')
-    //     context.commit('setUserInfo', data)
-    //   })
-    // }
+
   }
 }
 

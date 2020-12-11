@@ -1,7 +1,10 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
-// import serveStatic from 'serve-static'
+import { getTimeStamp } from './auth'
+import router from '@/router'
+
+const timeout = 2400
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -9,7 +12,18 @@ const service = axios.create({
 })
 service.interceptors.request.use(config => {
   if (store.getters.token) {
-    config.headers.Authorization = `Bearer ${store.getters.token}`
+    if (isCheckTimeout()) {
+      // 如果超时了做三件事情
+      // 1. 退出删除数据
+      store.dispatch('user/logout')
+      // 2. 跳到登录页
+      router.push('/login')
+      // 3. 返回一个错误
+      return Promise.reject(new Error('token 超时'))
+    } else {
+      config.headers.Authorization = `Bearer ${store.getters.token}`
+      // config.headers['Authorization'] = `Bearer ${store.getters.token}`
+    }
   }
   return config
 })
@@ -24,8 +38,22 @@ service.interceptors.response.use(res => {
     return Promise.reject(new Error(message))
   }
 }, err => {
+  console.dir(err)
+  if (err.response && err.response.data && err.response.data.code === 10002) {
+    store.dispatch('user/logout')
+    router.push('/login')
+  }
   Message.error(err.message)
   return Promise.reject(err.message)
 })
 
 export default service
+
+function isCheckTimeout(params) {
+  const now = Date.now()
+  const savedTime = getTimeStamp()
+  console.log(now)
+  console.log(savedTime)
+  return (now - savedTime) / 1000 >= timeout
+}
+

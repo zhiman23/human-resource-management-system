@@ -42,7 +42,7 @@ module.exports = {
         target: 'http://ihrm-java.itheima.net',
         changeOrigin: true
       }
-    },
+    }
   },
 
   configureWebpack: {
