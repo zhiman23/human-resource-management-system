@@ -17,6 +17,7 @@
 <script>
 import treeTools from './components/tree-tools.vue'
 import { getDepartments } from '@/api/departments'
+import { convertTreeData } from '@/utils/auth'
 export default {
   components: { treeTools },
   data() {
@@ -36,9 +37,11 @@ export default {
         name: res.companyName,
         manger: '负责人'
       }
-      this.departs = res.depts
+      // this.departs = res.depts
+      this.departs = convertTreeData(res.depts, '')
     })
   }
+
 }
 </script>
 

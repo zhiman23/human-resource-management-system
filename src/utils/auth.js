@@ -23,3 +23,16 @@ export function setTimeStamp() {
   return Cookies.set(timeKey, Date.now())
 }
 
+export function convertTreeData(list, pid) {
+  const res = []
+  list.forEach(item => {
+    if (item.pid === pid) {
+      const children = convertTreeData(list, item.id)
+      if (children.length > 0) {
+        item.children = children
+      }
+      res.push(item)
+    }
+  })
+  return res
+}
