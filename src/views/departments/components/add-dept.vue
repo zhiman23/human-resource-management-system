@@ -158,6 +158,13 @@ export default {
       }
     },
     btnCancel() {
+      // 强制重置数组，全部重置
+      this.formData = {
+        name: '',
+        code: '',
+        manger: '',
+        introduce: ''
+      }
       this.$refs.form.resetFields()
       this.$emit('update:showDialog', false)
     },
