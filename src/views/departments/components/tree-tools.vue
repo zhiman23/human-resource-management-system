@@ -6,7 +6,8 @@
     <el-col :span="4">
       <el-row type="flex" justify="end">
         <!-- 两个内容 -->
-        <el-col>{{ data.manger }}</el-col>
+        <el-col>
+          <span>{{ data.manager }}</span></el-col>
         <el-col>
           <!-- 下拉菜单 element -->
           <el-dropdown @command="operateDepts">
@@ -39,13 +40,16 @@ export default {
       type: Boolean
     }
   },
+  created() {
+    console.log(this.data)
+  },
   methods: {
     operateDepts(option) {
       if (option === 'add') {
         this.$emit('addDepts', this.data)
       }
       if (option === 'edit') {
-        //
+        this.$emit('editDepts', this.data)
       }
       if (option === 'del') {
         this.$confirm('是否确认删除该部门', '删除部门', {
