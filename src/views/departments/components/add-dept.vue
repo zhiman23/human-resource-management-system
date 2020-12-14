@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="title" :visible="showDialog" @close="btnCancel">
+  <el-dialog :title="title" :visible="showDialog" @close="btnCancel">
     <!-- 表单组件  el-form   label-width设置label的宽度   -->
     <!-- 匿名插槽 -->
     <el-form ref="form" label-width="120px" :model="formData" :rules="rules">
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments, getDepartmentDetails } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartmentDetails, editDepartment } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -131,7 +131,7 @@ export default {
   // 用计算属性控制弹窗标题
   computed: {
     title() {
-      return this.formData.did ? '编辑部门' : '新增部门'
+      return this.formData.id ? '编辑部门' : '新增部门'
     }
   },
   methods: {
@@ -141,15 +141,16 @@ export default {
     },
     async btnOk() {
       try {
-        console.log('点击了确认按钮')
         const isValid = await this.$refs.form.validate()
         if (isValid) {
-          console.log('校验通过, 可以发送请求了')
-          console.log(this.formData)
-          const data = { ...this.formData, pid: this.data.id }
-          console.log(data)
-          await addDepartments(data)
-          console.log('提交新增结果')
+          // 校验表单
+          if (this.formData.id) {
+            editDepartment(this.formData)
+          } else {
+            const data = { ...this.formData, pid: this.data.id }
+            await addDepartments(data)
+          }
+
           this.$emit('update:showDialog', false)
           this.$emit('addDepts')
         }

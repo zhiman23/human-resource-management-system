@@ -25,3 +25,11 @@ export function getDepartmentDetails(id) {
     url: '/company/department/' + id
   })
 }
+
+export function editDepartment(data) {
+  return request({
+    url: '/company/department' + data.id,
+    method: 'put',
+    data
+  })
+}
