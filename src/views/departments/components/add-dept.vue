@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
+  <el-dialog title="title" :visible="showDialog" @close="btnCancel">
     <!-- 表单组件  el-form   label-width设置label的宽度   -->
     <!-- 匿名插槽 -->
     <el-form ref="form" label-width="120px" :model="formData" :rules="rules">
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartmentDetails } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -128,6 +128,12 @@ export default {
       }
     }
   },
+  // 用计算属性控制弹窗标题
+  computed: {
+    title() {
+      return this.formData.did ? '编辑部门' : '新增部门'
+    }
+  },
   methods: {
     async getEmployeeSimple() {
       this.people = await getEmployeeSimple()
@@ -156,8 +162,9 @@ export default {
       this.$emit('update:showDialog', false)
     },
     // 数据回显
-    getDepartmentDetails() {
-      this.formData = this.data
+    async getDepartmentDetails() {
+      const data = await getDepartmentDetails(this.data.id)
+      this.formData = data
     }
   }
 }
