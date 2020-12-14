@@ -73,18 +73,35 @@ export default {
       getDepartments().then((data) => {
         const { depts } = data
         // const existed = false
-        depts.some((item) => item.name === value && item.pid === this.data.id)
-          ? callback(new Error('同一个部门下不能重名'))
-          : callback()
+        // depts.some((item) => item.name === value && item.pid === this.data.id)
+        //   ? callback(new Error('同一个部门下不能重名'))
+        //   : callback()
+        if (this.formData.id) {
+          // 编辑
+          depts.some((item) => item.id !== this.formData.id && item.name === value && item.pid === this.data.id)
+            ? callback(new Error('同一个部门下不能重名'))
+            : callback()
+        } else {
+          // 新增
+          depts.some((item) => item.name === value && item.pid === this.data.id)
+            ? callback(new Error('同一个部门下不能重名'))
+            : callback()
+        }
       })
     }
 
     const validateDeptsCode = (rule, value, callback) => {
       getDepartments().then((data) => {
         const { depts } = data
-        depts.some((item) => item.code === value && value)
-          ? callback(new Error('不能有重复的部门代码'))
-          : callback()
+        if (this.formData.id) {
+          depts.some((item) => item.id !== this.formData.id && item.code === value && value)
+            ? callback(new Error('不能有重复的部门代码'))
+            : callback()
+        } else {
+          depts.some((item) => item.code === value && value)
+            ? callback(new Error('不能有重复的部门代码'))
+            : callback()
+        }
       })
     }
 
