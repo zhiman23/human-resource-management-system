@@ -13,12 +13,18 @@
             slot-scope="{ data }"
             :data="data"
             @addDepts="addDepts"
+            @editDepts="editDepts"
             @delDepts="loadPage"
           />
         </el-tree>
       </el-card>
     </div>
-    <addDept :show-dialog.sync="showDialog" :data="node" @addDepts="loadPage" />
+    <addDept
+      ref="deptDialog"
+      :show-dialog.sync="showDialog"
+      :data="node"
+      @addDepts="loadPage"
+    />
   </div>
 </template>
 
@@ -63,6 +69,14 @@ export default {
     addDepts(node) {
       this.showDialog = true
       this.node = node
+    },
+    editDepts(node) {
+      this.showDialog = true
+      this.node = node
+      // 弹窗和记录数据， 子组件回显数据
+      this.$nextTick(() => {
+        this.$refs.deptDialog.getDepartmentDetails()
+      })
     }
   }
 }
