@@ -19,7 +19,7 @@ service.interceptors.request.use(config => {
       // 2. 跳到登录页
       router.push('/login')
       // 3. 返回一个错误
-      return Promise.reject(new Error('token 超时'))
+      return Promise.reject(new Error('登录超时'))
     } else {
       config.headers.Authorization = `Bearer ${store.getters.token}`
       // config.headers['Authorization'] = `Bearer ${store.getters.token}`
