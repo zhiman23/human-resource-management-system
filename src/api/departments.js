@@ -5,3 +5,17 @@ export const getDepartments = function() {
     url: '/company/department'
   })
 }
+export function delDepdartments(id) {
+  return request({
+    url: '/company/department' + id,
+    method: 'delete'
+  })
+}
+
+export function addDepartments(data) {
+  return request({
+    method: 'post',
+    url: '/company/department',
+    data
+  })
+}
