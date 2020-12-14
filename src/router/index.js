@@ -79,13 +79,15 @@ const asyncRouters = [
       meta: { title: '测试页' }
     }]
   },
-  approvalsRouter,
+
   departmentsRouter,
+  settingRouter,
+  approvalsRouter,
   employeesRouter,
   permissionRouter,
   attendancesRouter,
   salarysRouter,
-  settingRouter,
+
   socialRouter
 ]
 
