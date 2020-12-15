@@ -5,9 +5,9 @@ export const getDepartments = function() {
     url: '/company/department'
   })
 }
-export function delDepdartments(id) {
+export function delDepartments(id) {
   return request({
-    url: '/company/department' + id,
+    url: '/company/department/' + id,
     method: 'delete'
   })
 }
