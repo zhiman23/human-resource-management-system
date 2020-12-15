@@ -23,7 +23,15 @@
               <el-table-column prop="name" label="角色名" />
               <el-table-column prop="description" label="描述" />
               <el-table-column label="操作">
-                编辑角色 | 删除角色
+                <template slot-scope="scope">
+                  <!-- 编辑角色弹出窗口按钮 -->
+                  <el-button type="text" @click="editRole">
+                    编辑角色
+                  </el-button>
+                  <el-button type="text" @click="delRole(scope.row.id)">
+                    删除角色
+                  </el-button>
+                </template>
               </el-table-column>
             </el-table>
             <el-row
@@ -69,17 +77,38 @@
           </el-tab-pane>
         </el-tabs>
       </el-card>
+      <!-- 编辑/新增的弹窗 -->
+      <el-dialog
+        title="新增角色"
+        :visible.sync="showDialog"
+        width="50%"
+      >
+        <el-form label-width="80px">
+          <el-form-item label="角色名称">
+            <el-input v-model="roleFormData.name" />
+          </el-form-item>
+          <el-form-item label="角色描述">
+            <el-input v-model="roleFormData.description" />
+          </el-form-item>
+        </el-form>
+
+        <template slot="footer">
+          <el-button>取消</el-button>
+          <el-button type="primary">确认</el-button>
+        </template>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { getRoleList, getCompanyDetail } from '@/api/setting'
+import { getRoleList, getCompanyDetail, delRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
+      showDialog: false,
       activeName: 'role',
       roleList: [],
       pageSetting: {
@@ -87,7 +116,11 @@ export default {
         pagesize: 2,
         total: 0
       },
-      companyDetail: {}
+      companyDetail: {},
+      roleFormData: {
+        name: '',
+        description: ''
+      }
     }
   },
   computed: {
@@ -117,6 +150,20 @@ export default {
       console.log(data)
       // 拿到数据渲染到信息表上
       this.companyDetail = data
+    },
+    async delRole(id) {
+      // 弹窗、错误捕获
+      try {
+        await this.$confirm('是否确认删除该角色')
+        await delRole(id)
+        this.getRoleList()
+        this.$message.success('删除成功')
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async editRole() {
+      this.showDialog = true
     },
     currentChange(newPage) {
       this.pageSetting.page = newPage

@@ -14,3 +14,27 @@ export function getCompanyDetail(campanyId) {
     url: '/company/' + campanyId
   })
 }
+
+// 根据ID删除角色
+export function delRole(roleId) {
+  return request({
+    url: '/sys/role/' + roleId,
+    method: 'delete'
+  })
+}
+
+// 根据ID获取角色
+export function getRoleDetail(id) {
+  return request({
+    url: '/sys/role/' + id
+  })
+}
+
+// 根据ID更新角色
+export function updateDetail(data) {
+  return request({
+    method: 'put',
+    url: '/sys/role/' + data.id,
+    data
+  })
+}
