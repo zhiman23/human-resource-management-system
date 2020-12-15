@@ -59,42 +59,63 @@
             />
             <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="企业名称">
-                <el-input v-model="companyDetail.name" disabled style="width: 400px" />
+                <el-input
+                  v-model="companyDetail.name"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="公司地址">
-                <el-input v-model="companyDetail.companyAddress" disabled style="width: 400px" />
+                <el-input
+                  v-model="companyDetail.companyAddress"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="公司电话">
-                <el-input v-model="companyDetail.companyPhone" disabled style="width: 400px" />
+                <el-input
+                  v-model="companyDetail.companyPhone"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="邮箱">
-                <el-input v-model="companyDetail.mailbox" disabled style="width: 400px" />
+                <el-input
+                  v-model="companyDetail.mailbox"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
               <el-form-item label="备注">
-                <el-input v-model="companyDetail.remarks" disabled style="width: 400px" />
+                <el-input
+                  v-model="companyDetail.remarks"
+                  disabled
+                  style="width: 400px"
+                />
               </el-form-item>
             </el-form>
           </el-tab-pane>
         </el-tabs>
       </el-card>
       <!-- 编辑/新增的弹窗 -->
-      <el-dialog
-        title="新增角色"
-        :visible.sync="showDialog"
-        width="50%"
-      >
-        <el-form label-width="80px">
-          <el-form-item label="角色名称">
+      <el-dialog title="新增角色" :visible.sync="showDialog" width="50%">
+        <el-form
+          ref="roleForm"
+          label-width="80px"
+          :model="roleFormData"
+          :rules="rules"
+        >
+          <el-form-item label="角色名称" prop="name">
             <el-input v-model="roleFormData.name" />
           </el-form-item>
-          <el-form-item label="角色描述">
+          <el-form-item label="角色描述" prop="description">
             <el-input v-model="roleFormData.description" />
           </el-form-item>
         </el-form>
 
         <template slot="footer">
           <el-button>取消</el-button>
-          <el-button type="primary">确认</el-button>
+          <el-button type="primary" @click="btnOk">确认</el-button>
         </template>
       </el-dialog>
     </div>
@@ -102,7 +123,13 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyDetail, delRole, getRoleDetail } from '@/api/setting'
+import {
+  getRoleList,
+  getCompanyDetail,
+  delRole,
+  getRoleDetail,
+  updateRole
+} from '@/api/setting'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -120,6 +147,21 @@ export default {
       roleFormData: {
         name: '',
         description: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '角色名称不能为空', trigger: 'blur' },
+          { min: 2, max: 12, message: '角色名称在2-12位之间', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '角色描述不能为空', trigger: 'blur' },
+          {
+            min: 5,
+            max: 100,
+            message: '角色描述在5-100字符之间',
+            trigger: 'blur'
+          }
+        ]
       }
     }
   },
@@ -166,6 +208,21 @@ export default {
       const data = await this.getRoleDetail(id)
       this.roleFormData = data
       this.showDialog = true
+    },
+    //
+    async btnOk() {
+      try {
+        const isValid = await this.$refs.roleForm.validate()
+        if (isValid) {
+          await updateRole(this.roleFormData)
+          this.$message.success('修改成功')
+          this.showDialog = false
+          // 修改成功后重新加载数据
+          this.getRoleList()
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     currentChange(newPage) {
       this.pageSetting.page = newPage

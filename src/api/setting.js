@@ -31,10 +31,19 @@ export function getRoleDetail(id) {
 }
 
 // 根据ID更新角色
-export function updateDetail(data) {
+export function updateRole(data) {
   return request({
     method: 'put',
     url: '/sys/role/' + data.id,
+    data
+  })
+}
+
+// 添加角色
+export function addRole(data) {
+  return request({
+    url: '/sys/role',
+    method: 'post',
     data
   })
 }
