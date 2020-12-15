@@ -4,7 +4,12 @@
       <el-card>
         <el-tabs v-model="activeName">
           <el-tab-pane name="role" label="角色管理">
-            <el-row type="flex" justify="center" align="middle" style="height: 60px">
+            <el-row
+              type="flex"
+              justify="center"
+              align="middle"
+              style="height: 60px"
+            >
               <el-col>
                 <el-button size="small" type="primary">新增角色</el-button>
               </el-col>
@@ -21,12 +26,17 @@
                 编辑角色 | 删除角色
               </el-table-column>
             </el-table>
-            <el-row type="flex" justify="end" align="middle" style="height: 60px;">
+            <el-row
+              type="flex"
+              justify="end"
+              align="middle"
+              style="height: 60px"
+            >
               <el-pagination
                 layout="total,sizes,prev,pager,next,jumper"
                 :total="pageSetting.total"
                 :page-size="pageSetting.pagesize"
-                :page-sizes="[2,5,10,20]"
+                :page-sizes="[2, 5, 10, 20]"
                 @current-change="currentChange"
                 @size-change="sizeChange"
               />
@@ -39,7 +49,7 @@
               :show-icon="true"
               :closable="false"
             />
-            <el-form label-width="120px" style="margin-top:50px">
+            <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="企业名称">
                 <el-input disabled style="width: 400px" />
               </el-form-item>
@@ -64,7 +74,9 @@
 </template>
 
 <script>
-import { getRoleList } from '@/api/setting'
+import { getRoleList, getCompanyDetail } from '@/api/setting'
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -77,6 +89,19 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['companId'])
+  },
+  watch: {
+    companyId: {
+      handler() {
+        if (this.companyId) {
+          this.getCompanyDetail()
+        }
+      },
+      immediate: true
+    }
+  },
   created() {
     this.getRoleList()
   },
@@ -85,6 +110,10 @@ export default {
       const { rows, total } = await getRoleList(this.pageSetting)
       this.roleList = rows
       this.pageSetting.total = total
+    },
+    async getCompanyDetail() {
+      const data = await getCompanyDetail(this.companyId)
+      console.log(data)
     },
     currentChange(newPage) {
       this.pageSetting.page = newPage
@@ -99,5 +128,4 @@ export default {
 </script>
 
 <style>
-
 </style>
