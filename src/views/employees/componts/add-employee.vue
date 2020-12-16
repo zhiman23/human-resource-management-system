@@ -43,12 +43,14 @@
           placeholder="请选择部门"
           @focus="getDepartments"
         />
-        <el-tree
-          v-if="treeData.length > 0"
-          :data="treeData"
-          :props="{ label: 'name' }"
-          :default-expand-all="true"
-        />
+        <div v-if="treeData.length > 0" class="treeWrapper">
+          <el-tree
+            class="treeDeparment"
+            :data="treeData"
+            :props="{ label: 'name' }"
+            :default-expand-all="true"
+          />
+        </div>
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker
@@ -133,5 +135,19 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.treeWrapper {
+  width: 300px;
+  height: 300px;
+  border: 1px solid #888;
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  z-index: 999;
+  .treeDeparment {
+    width: 317px;
+    height: 100%;
+    overflow-y: scroll;
+  }
+}
 </style>
