@@ -35,6 +35,10 @@ Vue.use(ElementUI)
 import { imageerror } from '@/directives'
 Vue.directive('imageerror', imageerror)
 
+// 封装全局组件
+import Components from '@/components'
+Vue.use(Components)
+
 Vue.config.productionTip = false
 
 new Vue({
