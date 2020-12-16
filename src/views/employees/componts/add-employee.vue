@@ -41,6 +41,13 @@
           v-model="formData.departmentName"
           style="width: 50%"
           placeholder="请选择部门"
+          @focus="getDepartments"
+        />
+        <el-tree
+          v-if="treeData.length > 0"
+          :data="treeData"
+          :props="{ label: 'name' }"
+          :default-expand-all="true"
         />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
@@ -65,6 +72,9 @@
 </template>
 
 <script>
+import { getDepartments } from '@/api/departments'
+import { convertTreeData } from '@/utils'
+
 export default {
   props: {
     showDialog: {
@@ -74,6 +84,7 @@ export default {
   },
   data() {
     return {
+      treeData: [],
       formData: {
         username: '',
         mobile: '',
@@ -84,17 +95,39 @@ export default {
         correctionTime: ''
       },
       rules: {
-        username: [{ required: true, message: '用户姓名不能为空', trigger: 'blur' }, {
-          min: 1, max: 4, message: '用户姓名为1-4位'
-        }],
-        mobile: [{ required: true, message: '手机号不能为空', trigger: 'blur' }, {
-          pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur'
-        }],
-        formOfEmployment: [{ required: true, message: '聘用形式不能为空', trigger: 'blur' }],
-        workNumber: [{ required: true, message: '工号不能为空', trigger: 'blur' }],
-        departmentName: [{ required: true, message: '部门不能为空', trigger: 'change' }],
+        username: [
+          { required: true, message: '用户姓名不能为空', trigger: 'blur' },
+          {
+            min: 1,
+            max: 4,
+            message: '用户姓名为1-4位'
+          }
+        ],
+        mobile: [
+          { required: true, message: '手机号不能为空', trigger: 'blur' },
+          {
+            pattern: /^1[3-9]\d{9}$/,
+            message: '手机号格式不正确',
+            trigger: 'blur'
+          }
+        ],
+        formOfEmployment: [
+          { required: true, message: '聘用形式不能为空', trigger: 'blur' }
+        ],
+        workNumber: [
+          { required: true, message: '工号不能为空', trigger: 'blur' }
+        ],
+        departmentName: [
+          { required: true, message: '部门不能为空', trigger: 'change' }
+        ],
         timeOfEntry: [{ required: true, message: '入职时间', trigger: 'blur' }]
       }
+    }
+  },
+  methods: {
+    async getDepartments() {
+      const { depts } = await getDepartments()
+      this.treeData = convertTreeData(depts, '')
     }
   }
 }
