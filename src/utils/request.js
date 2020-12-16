@@ -7,8 +7,10 @@ import router from '@/router'
 const timeout = 2400
 
 const service = axios.create({
+  // 设置axios请求基础地址
   baseURL: process.env.VUE_APP_BASE_API,
-  timeout: 5000
+  // 定义超时响应
+  timeout: 500000
 })
 service.interceptors.request.use(config => {
   if (store.getters.token) {
