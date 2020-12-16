@@ -11,8 +11,10 @@
       </PageTools>
       <el-card>
         <el-table :data="list" border>
-          <el-table-column>
-            <template slot-scope="{ $index }">{{ $index + 1 }}</template>
+          <el-table-column label="序号">
+            <template slot-scope="{ $index }">{{
+              (pageSetting.page - 1) * pageSetting.size + 1 + $index
+            }}</template>
           </el-table-column>
           <el-table-column label="姓名" prop="username" sortable="" />
           <el-table-column label="工号" prop="workNumber" sortable="" />
@@ -53,7 +55,12 @@ import { getUserList } from '@/api/employees'
 export default {
   data() {
     return {
-      list: [{ name: '炎炎' }],
+      list: [
+        { username: '炎炎' },
+        { username: '王大锤' },
+        { username: '陈翠花' },
+        { username: 'Tom' }
+      ],
       pageSetting: {
         page: 1,
         size: 10,
@@ -61,9 +68,7 @@ export default {
       }
     }
   },
-  created() {
-
-  },
+  created() {},
   methods: {
     async getUserList() {
       const { rows, total } = await getUserList(this.pageSetting)
