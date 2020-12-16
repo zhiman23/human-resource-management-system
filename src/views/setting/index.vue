@@ -45,7 +45,7 @@
               style="height: 60px"
             >
               <el-pagination
-                layout="total,sizes,prev,pager,next,jumper"
+                layout="total, sizes, prev, pager, next, jumper"
                 :total="pageSetting.total"
                 :page-size="pageSetting.pagesize"
                 :page-sizes="[2, 5, 10, 20]"
@@ -257,7 +257,7 @@ export default {
       this.getRoleList()
     },
     sizeChange(newPagesize) {
-      this.pageSetting.pagesize
+      this.pageSetting.pagesize = newPagesize
       this.getRoleList()
     }
   }
