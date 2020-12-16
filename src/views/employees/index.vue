@@ -77,6 +77,7 @@ export default {
     sizeChange(newSize) {
       this.pageSetting.size = newSize
       this.getUserList()
+    }
   }
 }
 </script>
