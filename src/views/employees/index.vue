@@ -22,6 +22,7 @@
             label="聘用形式"
             prop="formOfEmployment"
             sortable=""
+            :formatter="formatEmployment"
           />
           <el-table-column label="部门" prop="departmentName" sortable="" />
           <el-table-column label="入职时间" prop="timeOfEntry" sortable="" />
@@ -37,6 +38,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页组件 -->
         <el-row type="flex" justify="end" align="middle" style="height: 60px">
           <el-paginationlayout
             layout="total, sizes, prev, pager, next, jumper"
@@ -52,9 +54,11 @@
 
 <script>
 import { getUserList } from '@/api/employees'
+import EmploymentEnum from '@/api/constant/employees'
 export default {
   data() {
     return {
+      // list:接数据
       list: [
         { username: '炎炎' },
         { username: '王大锤' },
@@ -62,14 +66,17 @@ export default {
         { username: 'Tom' }
       ],
       pageSetting: {
-        page: 1,
+        page: 1, // 当前页面
         size: 10,
-        total: 0
+        total: 0 // 总数
       }
     }
   },
-  created() {},
+  created() {
+    this.getUserList()
+  },
   methods: {
+    // 列表数据
     async getUserList() {
       const { rows, total } = await getUserList(this.pageSetting)
       this.pageSetting.total = total
@@ -82,6 +89,11 @@ export default {
     sizeChange(newSize) {
       this.pageSetting.size = newSize
       this.getUserList()
+    },
+    // 聘用形式
+    formatEmployment(row, column, cellValue, index) {
+      const obj = EmploymentEnum.hireType.find(item => item.id === cellValue)
+      return obj.value
     }
   }
 }

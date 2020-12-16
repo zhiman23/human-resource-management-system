@@ -41,6 +41,12 @@ Vue.use(Components)
 
 Vue.config.productionTip = false
 
+// 资源过滤器
+// import * as filters from '@filters'
+// Object.keys(filters).forEach(key => {
+//   Vue.filter(key, filters[key])
+// })
+
 new Vue({
   el: '#app',
   router,
