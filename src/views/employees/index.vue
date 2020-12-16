@@ -30,15 +30,19 @@
               {{ row.timeOfEntry | formatDate }}
             </template>
           </el-table-column>
-          <el-table-column label="账户状态" prop="enableState" sortable="" />
+          <el-table-column label="账户状态" sortable="">
+            <template slot-scope="{row}">
+              <el-switch :value="row.enableState === 1" />
+            </template>
+          </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
-            <template>
+            <template slot-scope="{row}">
               <el-button type="text" size="small">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button type="text" size="small">角色</el-button>
-              <el-button type="text" size="small">删除</el-button>
+              <el-button type="text" size="small" @click="delEmployee(row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -59,7 +63,7 @@
 </template>
 
 <script>
-import { getUserList } from '@/api/employees'
+import { delEmployee, getUserList } from '@/api/employees'
 import EmploymentEnum from '@/api/constant/employees'
 export default {
   data() {
@@ -81,6 +85,8 @@ export default {
     async getUserList() {
       const { rows, total } = await getUserList(this.pageSetting)
       this.pageSetting.total = total
+      // 临时隐藏第一数据，避免删除管理员
+      // rows.shift()
       this.list = rows
     },
     currentChange(newPage) {
@@ -95,6 +101,16 @@ export default {
     formatEmployment(row, column, cellValue, index) {
       const obj = EmploymentEnum.hireType.find(item => item.id === cellValue)
       return obj ? obj.value : '其他'
+    },
+    async delEmployee(id) {
+      try {
+        await this.$confirm('请确认删除该员工')
+        await delEmployee(id)
+        await getUserList()
+        this.$message.success('成功删除员工')
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
