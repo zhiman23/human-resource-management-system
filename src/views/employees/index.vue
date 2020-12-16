@@ -40,14 +40,16 @@
         </el-table>
         <!-- 分页组件 -->
         <el-row type="flex" justify="end" align="middle" style="height: 60px">
-          <el-paginationlayout
+          <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
             :total="pageSetting.total"
             :page-size="pageSetting.size"
             :page-sizes="[2, 5, 10, 20, 50]"
             @current-change="currentChange"
             @size-change="sizeChange"
-          /> </el-row></el-card>
+          />
+        </el-row>
+      </el-card>
     </div>
   </div>
 </template>
@@ -59,12 +61,7 @@ export default {
   data() {
     return {
       // list:接数据
-      list: [
-        { username: '炎炎' },
-        { username: '王大锤' },
-        { username: '陈翠花' },
-        { username: 'Tom' }
-      ],
+      list: [],
       pageSetting: {
         page: 1, // 当前页面
         size: 10,
@@ -93,7 +90,7 @@ export default {
     // 聘用形式
     formatEmployment(row, column, cellValue, index) {
       const obj = EmploymentEnum.hireType.find(item => item.id === cellValue)
-      return obj.value
+      return obj ? obj.value : '其他'
     },
     // 入职时间
     formatTimeEntry(row, column, cellValue, index) {
