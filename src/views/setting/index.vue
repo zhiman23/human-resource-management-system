@@ -11,7 +11,11 @@
               style="height: 60px"
             >
               <el-col>
-                <el-button size="small" type="primary">新增角色</el-button>
+                <el-button
+                  size="small"
+                  type="primary"
+                  @click="addRole"
+                >新增角色</el-button>
               </el-col>
             </el-row>
             <el-table :data="roleList" style="width: 100%">
@@ -98,7 +102,7 @@
         </el-tabs>
       </el-card>
       <!-- 编辑/新增的弹窗 -->
-      <el-dialog title="新增角色" :visible.sync="showDialog" width="50%">
+      <el-dialog :title="dialogTitle" :visible.sync="showDialog" width="50%" @close="btnCancel">
         <el-form
           ref="roleForm"
           label-width="80px"
@@ -114,7 +118,7 @@
         </el-form>
 
         <template slot="footer">
-          <el-button>取消</el-button>
+          <el-button @click="btnCancel">取消</el-button>
           <el-button type="primary" @click="btnOk">确认</el-button>
         </template>
       </el-dialog>
@@ -128,7 +132,8 @@ import {
   getCompanyDetail,
   delRole,
   getRoleDetail,
-  updateRole
+  updateRole,
+  addRole
 } from '@/api/setting'
 import { mapGetters } from 'vuex'
 
@@ -166,7 +171,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['companyId'])
+    ...mapGetters(['companyId']),
+    dialogTitle() {
+      console.log(123123)
+      console.log(this.roleFormData.id)
+      return this.roleFormData.id ? '编辑角色' : '新增角色'
+    }
   },
   watch: {
     companyId: {
@@ -209,20 +219,38 @@ export default {
       this.roleFormData = data
       this.showDialog = true
     },
+    addRole() {
+      this.showDialog = true
+    },
     //
     async btnOk() {
       try {
         const isValid = await this.$refs.roleForm.validate()
         if (isValid) {
-          await updateRole(this.roleFormData)
-          this.$message.success('修改成功')
-          this.showDialog = false
-          // 修改成功后重新加载数据
-          this.getRoleList()
+          if (this.roleFormData.id) {
+            await updateRole(this.roleFormData)
+            this.$message.success('修改成功')
+          } else {
+            // 这里就是新增逻辑
+            await addRole(this.roleFormData)
+            this.$message.success('添加成功')
+          }
         }
       } catch (error) {
         console.log(error)
       }
+    },
+    btnCancel() {
+      // 这里是关闭弹窗时需要处理的数据
+      // 重置表单数据和错误提示
+      this.roleFormData = {
+        name: '',
+        description: ''
+      }
+      // 这个 reset 只能清理表单有绑定的数据
+      // 回显时添加的属性就没办法了
+      this.$refs.roleForm.resetFields()
+      this.showDialog = false
     },
     currentChange(newPage) {
       this.pageSetting.page = newPage

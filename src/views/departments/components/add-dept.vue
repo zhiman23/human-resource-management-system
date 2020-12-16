@@ -37,6 +37,7 @@
           v-model="formData.introduce"
           style="width: 80%"
           placeholder="1-300个字符"
+          resize="none"
           type="textarea"
           :rows="3"
         />
