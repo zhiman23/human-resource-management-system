@@ -215,7 +215,7 @@ export default {
       }
     },
     async editRole(id) {
-      const data = await this.getRoleDetail(id)
+      const data = await getRoleDetail(id)
       this.roleFormData = data
       this.showDialog = true
     },
