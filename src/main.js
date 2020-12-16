@@ -42,8 +42,12 @@ Vue.use(Components)
 Vue.config.productionTip = false
 
 // 资源过滤器
-import { formatDate } from '@/filters'
-Vue.filter('formatDate', formatDate)
+import * as filters from '@/filters'
+for (var key in filters) {
+  const filterName = key
+  const filterFunction = filters[key]
+  Vue.filter(filterName, filterFunction)
+}
 
 new Vue({
   el: '#app',
