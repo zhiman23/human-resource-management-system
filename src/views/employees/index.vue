@@ -25,7 +25,7 @@
             :formatter="formatEmployment"
           />
           <el-table-column label="部门" prop="departmentName" sortable="" />
-          <el-table-column label="入职时间" prop="timeOfEntry" sortable="" />
+          <el-table-column label="入职时间" prop="timeOfEntry" sortable="" :formatter="formatTimeEntry" />
           <el-table-column label="账户状态" prop="enableState" sortable="" />
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template>
@@ -94,6 +94,10 @@ export default {
     formatEmployment(row, column, cellValue, index) {
       const obj = EmploymentEnum.hireType.find(item => item.id === cellValue)
       return obj.value
+    },
+    // 入职时间
+    formatTimeEntry(row, column, cellValue, index) {
+      return cellValue.split('T')[0]
     }
   }
 }
