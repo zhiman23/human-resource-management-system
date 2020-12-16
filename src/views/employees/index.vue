@@ -10,14 +10,20 @@
         </template>
       </PageTools>
       <el-card>
-        <el-table border>
-          <el-table-column label="序号" sortable="" />
-          <el-table-column label="姓名" sortable="" />
-          <el-table-column label="工号" sortable="" />
-          <el-table-column label="聘用形式" sortable="" />
-          <el-table-column label="部门" sortable="" />
-          <el-table-column label="入职时间" sortable="" />
-          <el-table-column label="账户状态" sortable="" />
+        <el-table :data="list" border>
+          <el-table-column>
+            <template slot-scope="{ $index }">{{ $index + 1 }}</template>
+          </el-table-column>
+          <el-table-column label="姓名" prop="username" sortable="" />
+          <el-table-column label="工号" prop="workNumber" sortable="" />
+          <el-table-column
+            label="聘用形式"
+            prop="formOfEmployment"
+            sortable=""
+          />
+          <el-table-column label="部门" prop="departmentName" sortable="" />
+          <el-table-column label="入职时间" prop="timeOfEntry" sortable="" />
+          <el-table-column label="账户状态" prop="enableState" sortable="" />
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template>
               <el-button type="text" size="small">查看</el-button>
@@ -30,19 +36,47 @@
           </el-table-column>
         </el-table>
         <el-row type="flex" justify="end" align="middle" style="height: 60px">
-          <el-pagination layout="prev, pager, next" :total="80" /> </el-row></el-card>
+          <el-paginationlayout
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pageSetting.total"
+            :page-size="pageSetting.size"
+            :page-sizes="[2, 5, 10, 20, 50]"
+            @current-change="currentChange"
+            @size-change="sizeChange"
+          /> </el-row></el-card>
     </div>
   </div>
 </template>
 
 <script>
+import { getUserList } from '@/api/employees'
 export default {
   data() {
     return {
-      list: [
-        { name: '炎炎' }
-      ]
+      list: [{ name: '炎炎' }],
+      pageSetting: {
+        page: 1,
+        size: 10,
+        total: 0
+      }
     }
+  },
+  created() {
+
+  },
+  methods: {
+    async getUserList() {
+      const { rows, total } = await getUserList(this.pageSetting)
+      this.pageSetting.total = total
+      this.list = rows
+    },
+    currentChange(newPage) {
+      this.pageSetting.page = newPage
+      this.getUserList()
+    },
+    sizeChange(newSize) {
+      this.pageSetting.size = newSize
+      this.getUserList()
   }
 }
 </script>
