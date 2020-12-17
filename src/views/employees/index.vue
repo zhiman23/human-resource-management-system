@@ -119,6 +119,23 @@ export default {
         console.log(error)
       }
     }
+  },
+  created() {
+
+  },
+  methods: {
+    async getUserList() {
+      const { rows, total } = await getUserList(this.pageSetting)
+      this.pageSetting.total = total
+      this.list = rows
+    },
+    currentChange(newPage) {
+      this.pageSetting.page = newPage
+      this.getUserList()
+    },
+    sizeChange(newSize) {
+      this.pageSetting.size = newSize
+      this.getUserList()
   }
 }
 </script>
