@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="新增员工" :visible="showDialog">
-    <el-form label-width="120px" :model="formData" :rules="rules">
+  <el-dialog title="新增员工" :visible="showDialog" @close="btnCancel">
+    <el-form ref="form" label-width="120px" :model="formData" :rules="rules">
       <el-form-item label="姓名" prop="username">
         <el-input
           v-model="formData.username"
@@ -67,7 +67,7 @@
     <template v-slot:footer>
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button size="small">取消</el-button>
+          <el-button size="small" @click="btnCancel">取消</el-button>
           <el-button type="primary" size="small" @click="btnOk">确定</el-button>
         </el-col>
       </el-row>
@@ -168,6 +168,19 @@ export default {
       const data = await addEmployee(this.formData)
       this.$parent.showDialog = false
       this.$parent.getUserList()
+    },
+    btnCancel() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.form.resetFields()
+      this.$emit('update:showDialog', false)
     }
   }
 }

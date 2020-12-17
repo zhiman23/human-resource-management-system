@@ -66,7 +66,8 @@
           />
         </el-row>
       </el-card>
-      <AddEmployee :show-dialog="showDialog" @addEmployee="getUserList" />
+      <!-- sync同步 -->
+      <AddEmployee :show-dialog.sync="showDialog" @addEmployee="getUserList" />
     </div>
   </div>
 </template>
