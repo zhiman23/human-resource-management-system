@@ -28,7 +28,7 @@
           style="width: 50%"
           placeholder="请选择"
         >
-          <el-option v-for="item in employeesEnum.hireType" :key="item.id" :value="item.id" :label="item.value" /></el-option></el-select>
+          <el-option v-for="item in employeesEnum.hireType" :key="item.id" :value="item.id" :label="item.value" /></el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
         <el-input
