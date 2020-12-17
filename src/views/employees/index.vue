@@ -66,7 +66,7 @@
           />
         </el-row>
       </el-card>
-      <AddEmployee :show-dialog="showDialog" />
+      <AddEmployee :show-dialog="showDialog" @addEmployee="getUserList" />
     </div>
   </div>
 </template>

@@ -68,7 +68,7 @@
       <el-row type="flex" justify="center">
         <el-col :span="6">
           <el-button size="small">取消</el-button>
-          <el-button type="primary" size="small">确定</el-button>
+          <el-button type="primary" size="small" @click="btnOk">确定</el-button>
         </el-col>
       </el-row>
     </template>
@@ -79,6 +79,7 @@
 import { getDepartments } from '@/api/departments'
 import { convertTreeData } from '@/utils/index'
 import employeesEnum from '@/api/constant/employees'
+import { addEmployee } from '@/api/employees'
 
 export default {
   props: {
@@ -139,6 +140,11 @@ export default {
       console.log(data)
       this.formData.departmentName = data.name
       this.treeData = []
+    },
+    async btnOk() {
+      const data = await addEmployee(this.formData)
+      this.$parent.showDialog = false
+      this.$parent.getUserList()
     }
   }
 }
