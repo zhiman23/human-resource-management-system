@@ -6,7 +6,11 @@
         <template slot="after">
           <el-button size="small" type="warning">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
-          <el-button size="small" type="primary" @click="showDialog=true">新增员工</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="showDialog = true"
+          >新增员工</el-button>
         </template>
       </PageTools>
       <el-card>
@@ -26,23 +30,27 @@
           />
           <el-table-column label="部门" prop="departmentName" sortable="" />
           <el-table-column label="入职时间" sortable="">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               {{ row.timeOfEntry | formatDate }}
             </template>
           </el-table-column>
           <el-table-column label="账户状态" sortable="">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <el-switch :value="row.enableState === 1" />
             </template>
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <el-button type="text" size="small">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button type="text" size="small">角色</el-button>
-              <el-button type="text" size="small" @click="delEmployee(row.id)">删除</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="delEmployee(row.id)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -106,7 +114,7 @@ export default {
     },
     // 聘用形式
     formatEmployment(row, column, cellValue, index) {
-      const obj = EmploymentEnum.hireType.find(item => item.id === cellValue)
+      const obj = EmploymentEnum.hireType.find((item) => item.id === cellValue)
       return obj ? obj.value : '其他'
     },
     async delEmployee(id) {
@@ -119,23 +127,6 @@ export default {
         console.log(error)
       }
     }
-  },
-  created() {
-
-  },
-  methods: {
-    async getUserList() {
-      const { rows, total } = await getUserList(this.pageSetting)
-      this.pageSetting.total = total
-      this.list = rows
-    },
-    currentChange(newPage) {
-      this.pageSetting.page = newPage
-      this.getUserList()
-    },
-    sizeChange(newSize) {
-      this.pageSetting.size = newSize
-      this.getUserList()
   }
 }
 </script>
