@@ -27,7 +27,8 @@
           v-model="formData.formOfEmployment"
           style="width: 50%"
           placeholder="请选择"
-        />
+        >
+          <el-option v-for="item in employeesEnum.hireType" :key="item.id" :value="item.id" :label="item.value" /></el-option></el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
         <el-input
@@ -49,6 +50,7 @@
             :data="treeData"
             :props="{ label: 'name' }"
             :default-expand-all="true"
+            @node-click="selectNode"
           />
         </div>
       </el-form-item>
@@ -75,7 +77,8 @@
 
 <script>
 import { getDepartments } from '@/api/departments'
-import { convertTreeData } from '@/utils'
+import { convertTreeData } from '@/utils/index'
+import employeesEnum from '@/api/constant/employees'
 
 export default {
   props: {
@@ -86,6 +89,7 @@ export default {
   },
   data() {
     return {
+      employeesEnum,
       treeData: [],
       formData: {
         username: '',
@@ -130,6 +134,11 @@ export default {
     async getDepartments() {
       const { depts } = await getDepartments()
       this.treeData = convertTreeData(depts, '')
+    },
+    selectNode(data) {
+      console.log(data)
+      this.formData.departmentName = data.name
+      this.treeData = []
     }
   }
 }

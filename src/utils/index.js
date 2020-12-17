@@ -116,3 +116,17 @@ export function param2Obj(url) {
   return obj
 }
 
+export const convertTreeData = function(list, pid) {
+  const res = []
+  list.forEach(item => {
+    if (item.pid === pid) {
+      // 这里找到了这一层的儿子, 需要把这个儿子的 id 继续递归作为下一层的爸爸
+      const children = convertTreeData(list, item.id)
+      if (children.length > 0) {
+        item.children = children
+      }
+      res.push(item)
+    }
+  })
+  return res
+}
