@@ -58,7 +58,7 @@ export const constantRoutes = [
   {
     path: '/import',
     component: Layout,
-    hidden: false,
+    hidden: true,
     children: [
       {
         path: '',

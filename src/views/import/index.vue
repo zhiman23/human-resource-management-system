@@ -23,7 +23,16 @@ export default {
       const data = results.map((item) => {
         return this.cnToEn(item, dictionary)
       })
-      await importEmployees(data)
+      // 如果是员工页带上url参数跳进来，就发送员工导入请求，别的页面可以进行其他导入，导入成功后返回上一页
+      if (this.$route.query.type === 'employee') {
+        await importEmployees(data)
+        this.$message.success('导入成功')
+        setTimeout(() => {
+          this.$router.back()
+        }, 800)
+      } else {
+        this.$message.error('未知导入类型')
+      }
     },
     cnToEn(item, dictionary) {
       const newItem = {}
