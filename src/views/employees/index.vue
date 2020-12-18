@@ -5,7 +5,7 @@
         <span slot="before">共166条记录</span>
         <template slot="after">
           <el-button size="small" type="warning" @click="$router.push('/import?type=employee')">导入</el-button>
-          <el-button size="small" type="danger">导出</el-button>
+          <el-button size="small" type="danger" @click="exportData">导出</el-button>
           <el-button
             size="small"
             type="primary"
@@ -97,6 +97,70 @@ export default {
     this.getUserList()
   },
   methods: {
+
+    async exportData() {
+      // 导出excel文件
+      const excel = await import('@/vendor/Export2Excel')
+      // excel.export_json_to_excel({
+      //   header: tHeader, // 表头 必填
+      //   data, // 具体数据 必填
+      //   filename: 'excel-list', // 非必填
+      //   autoWidth: true, // 非必填
+      //   bookType: 'xlsx' // 非必填
+      // })
+
+      const headersEnum = {
+        '姓名': 'username',
+        '手机号': 'mobile',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+      const header = Object.keys(headersEnum)
+      console.log(header)
+
+      // console.log(excel)
+      const pageSetting = {
+        page: 1,
+        size: this.pageSetting.total
+      }
+      // 用引入的原 api 接口发送请求
+      const { rows } = await getUserList(pageSetting)
+      console.log(rows)
+
+      const data = rows.map(item => {
+        // 这里是遍历拿到的所有数据, 每个员工都是对象
+        // 需要转换为数组
+        const newItem = this.obj2Array(item, headersEnum)
+        return newItem
+      })
+      // 数据全部准备完毕以后, 导出 excel
+      excel.export_json_to_excel({
+        header,
+        data
+      })
+    },
+    obj2Array(item, dictionary) {
+      // console.log('原数据')
+      // console.log(item)
+
+      const array = []
+      // 当前我们的 item 是对象, 里面有各种数据,
+      // 应该根据枚举字典的顺序组成一个数组方便转成 excel
+      // console.log(item)
+      for (const key in dictionary) {
+        // console.log(key)
+        const enKey = dictionary[key]
+        const value = item[enKey]
+        array.push(value)
+      }
+
+      // console.log('转换后')
+      // console.log(array)
+      return array
+    },
     // 列表数据
     async getUserList() {
       const { rows, total } = await getUserList(this.pageSetting)
