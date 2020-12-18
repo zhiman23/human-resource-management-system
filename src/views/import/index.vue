@@ -32,8 +32,8 @@ export default {
       for (const key in item) {
         const newKey = dictionary[key]
         const value = item[key]
-        console.log(newKey)
-        console.log(value)
+        // console.log(newKey)
+        // console.log(value)
         newItem[newKey] = value
       }
       return newItem
