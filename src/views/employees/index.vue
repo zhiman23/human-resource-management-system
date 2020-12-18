@@ -122,7 +122,7 @@ export default {
       try {
         await this.$confirm('请确认删除该员工')
         await delEmployee(id)
-        await getUserList()
+        await this.getUserList()
         this.$message.success('成功删除员工')
       } catch (error) {
         console.log(error)
