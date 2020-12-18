@@ -20,6 +20,7 @@
           v-model="formData.timeOfEntry"
           style="width: 50%"
           placeholder="请选择入职时间"
+          @change="checkTwoTimeData"
         />
       </el-form-item>
       <el-form-item label="聘用形式" prop="formOfEmployment">
@@ -59,6 +60,7 @@
           v-model="formData.correctionTime"
           style="width: 50%"
           placeholder="请选择转正时间"
+          @change="checkTwoTimeData"
         />
       </el-form-item>
     </el-form>
@@ -165,9 +167,29 @@ export default {
       this.treeData = []
     },
     async btnOk() {
-      const data = await addEmployee(this.formData)
-      this.$parent.showDialog = false
-      this.$parent.getUserList()
+      // const data = await addEmployee(this.formData)
+      // this.$parent.showDialog = false
+      // this.$parent.getUserList()
+      const isvalid = await this.$refs.form.validate()
+      try {
+        if (isvalid) {
+          await addEmployee(this.formData)
+          this.formData = {
+            username: '',
+            mobile: '',
+            formOfEmployment: '',
+            workNumber: '',
+            departmentName: '',
+            timeOfEntry: '',
+            correctionTime: ''
+          }
+          this.$message.success('添加成功')
+          this.$emit('update:showDialog', false)
+          this.$parent.getemployeeList()
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     btnCancel() {
       this.formData = {
@@ -181,6 +203,9 @@ export default {
       }
       this.$refs.form.resetFields()
       this.$emit('update:showDialog', false)
+    },
+    checkTwoTimeData() {
+      this.$refs.form.validateField(['timeOfEntry', 'correctionTime'])
     }
   }
 }

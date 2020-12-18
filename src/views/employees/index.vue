@@ -76,6 +76,8 @@
 import { delEmployee, getUserList } from '@/api/employees'
 import EmploymentEnum from '@/api/constant/employees'
 import AddEmployee from './componts/add-employee'
+import { formatDate } from '@/filters'
+import employeesEnum from '@/api/constant/employees'
 
 export default {
   components: {
@@ -137,7 +139,17 @@ export default {
       for (const key in dictionary) {
         // 遍历枚举字典，获得一个个字段名，并去除数据
         const enKey = dictionary[key]
-        const value = item[enKey]
+        let value = item[enKey]
+        // 之前的转换, 直接将 value 放了出去
+        // 如果数据处理的是事件或者聘用形式, 需要额外处理
+        if (enKey === 'timeOfEntry' || enKey === 'correctionTime') {
+          value = formatDate(value)
+        }
+        // 如果是聘用形式的数据. 去全局枚举中找到对应的值替换回来
+        if (enKey === 'formOfEmployment') {
+          const obj = employeesEnum.hireType.find(item => item.id === value)
+          value = obj ? obj.value : '不确定的临时工'
+        }
         // 推入数组
         array.push(value)
       }
