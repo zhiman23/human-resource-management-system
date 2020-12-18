@@ -99,16 +99,6 @@ export default {
   methods: {
 
     async exportData() {
-      // 导出excel文件
-      const excel = await import('@/vendor/Export2Excel')
-      // excel.export_json_to_excel({
-      //   header: tHeader, // 表头 必填
-      //   data, // 具体数据 必填
-      //   filename: 'excel-list', // 非必填
-      //   autoWidth: true, // 非必填
-      //   bookType: 'xlsx' // 非必填
-      // })
-
       const headersEnum = {
         '姓名': 'username',
         '手机号': 'mobile',
@@ -119,23 +109,22 @@ export default {
         '部门': 'departmentName'
       }
       const header = Object.keys(headersEnum)
-      console.log(header)
-
-      // console.log(excel)
+      // 获取员工数据
       const pageSetting = {
         page: 1,
         size: this.pageSetting.total
       }
       // 用引入的原 api 接口发送请求
       const { rows } = await getUserList(pageSetting)
-      console.log(rows)
-
+      // 映射由对象组成的行数据，变成一个个员工数组
       const data = rows.map(item => {
-        // 这里是遍历拿到的所有数据, 每个员工都是对象
-        // 需要转换为数组
-        const newItem = this.obj2Array(item, headersEnum)
-        return newItem
+        // 遍历时拿到一个个员工对象, 通过函数转成数组
+        return this.obj2Array(item, headersEnum)
       })
+      // 异步引入导出库
+      const excel = await import('@/vendor/Export2Excel')
+      // 利用到出库创建 excel 文件
+
       // 数据全部准备完毕以后, 导出 excel
       excel.export_json_to_excel({
         header,
@@ -143,22 +132,15 @@ export default {
       })
     },
     obj2Array(item, dictionary) {
-      // console.log('原数据')
-      // console.log(item)
-
+      // 本来是对象，想要转成数组，所以创建一个新数组准备存放
       const array = []
-      // 当前我们的 item 是对象, 里面有各种数据,
-      // 应该根据枚举字典的顺序组成一个数组方便转成 excel
-      // console.log(item)
       for (const key in dictionary) {
-        // console.log(key)
+        // 遍历枚举字典，获得一个个字段名，并去除数据
         const enKey = dictionary[key]
         const value = item[enKey]
+        // 推入数组
         array.push(value)
       }
-
-      // console.log('转换后')
-      // console.log(array)
       return array
     },
     // 列表数据
