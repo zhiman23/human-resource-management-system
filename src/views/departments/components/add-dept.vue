@@ -2,7 +2,13 @@
   <el-dialog :title="title" :visible="showDialog" @close="btnCancel">
     <!-- 表单组件  el-form   label-width设置label的宽度   -->
     <!-- 匿名插槽 -->
-    <el-form ref="form" label-width="120px" :model="formData" :rules="rules">
+    <el-form
+      v-if="showDialog"
+      ref="form"
+      label-width="120px"
+      :model="formData"
+      :rules="rules"
+    >
       <el-form-item label="部门名称" prop="name">
         <el-input
           v-model="formData.name"
@@ -56,7 +62,12 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments, getDepartmentDetails, editDepartment } from '@/api/departments'
+import {
+  getDepartments,
+  addDepartments,
+  getDepartmentDetails,
+  editDepartment
+} from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -79,12 +90,23 @@ export default {
         //   : callback()
         if (this.formData.id) {
           // 编辑
-          depts.some((item) => item.id !== this.formData.id && item.name === value && item.pid === this.data.id)
+          depts.some(
+            (item) =>
+              item.id !== this.formData.id &&
+              item.name === value &&
+              item.pid === this.data.id
+          )
             ? callback(new Error('同一个部门下不能重名'))
             : callback()
         } else {
           // 新增
-          depts.some((item) => item.name === value && item.pid === this.data.id)
+          depts.some(
+            (item) =>
+              item.name === value &&
+              // 新增时 data 是父部门
+              // 所以找到一个 pid 跟 data.id 相同, 就是跟我同级
+              item.pid === this.data.id
+          )
             ? callback(new Error('同一个部门下不能重名'))
             : callback()
         }
@@ -95,7 +117,10 @@ export default {
       getDepartments().then((data) => {
         const { depts } = data
         if (this.formData.id) {
-          depts.some((item) => item.id !== this.formData.id && item.code === value && value)
+          depts.some(
+            (item) =>
+              item.id !== this.formData.id && item.code === value && value
+          )
             ? callback(new Error('不能有重复的部门代码'))
             : callback()
         } else {

@@ -36,7 +36,7 @@
           </el-table-column>
           <el-table-column label="账户状态" sortable="">
             <template slot-scope="{ row }">
-              <el-switch :value="row.enableState === 1" />
+              <el-switch :value="row.enableState === 1" active-color="#13ce66" />
             </template>
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">

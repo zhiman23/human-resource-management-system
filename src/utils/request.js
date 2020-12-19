@@ -4,7 +4,7 @@ import store from '@/store'
 import { getTimeStamp } from './auth'
 import router from '@/router'
 
-const timeout = 2400
+const timeout = 24000
 
 const service = axios.create({
   // 设置axios请求基础地址
