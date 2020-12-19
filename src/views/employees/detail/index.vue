@@ -13,14 +13,18 @@
                   <el-input v-model="formData.newPassword" type="password" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary">更新</el-button>
-                  <el-button>取消</el-button>
+                  <el-button type="primary" @click="updateAccount">更新</el-button>
+                  <el-button @click="$router.back()">取消</el-button>
                 </el-form-item>
               </el-form>
             </el-row>
           </el-tab-pane>
-          <el-tab-pane label="个人详情" name="detail"> 777 </el-tab-pane>
-          <el-tab-pane label="岗位信息" name="job"> 888 </el-tab-pane>
+          <el-tab-pane label="个人详情" name="detail">
+            <component :is="userInfoName" />
+          </el-tab-pane>
+          <el-tab-pane label="岗位信息" name="job">
+            <component :is="jobInfoName" />
+          </el-tab-pane>
         </el-tabs>
       </el-card>
     </div>
@@ -29,10 +33,19 @@
 
 <script>
 import { getUserDetailById } from '@/api/user'
+import { saveUserDetailById } from '@/api/employees'
+import UserInfo from '@/views/employees/componts/user-info'
+import JobInfo from '@/views/employees/componts/job-info'
 
 export default {
+  components: {
+    UserInfo,
+    JobInfo
+  },
   data() {
     return {
+      userInfoName: 'UserInfo',
+      jobInfoName: 'JobInfo',
       userId: this.$route.params.id,
       activeName: 'account',
       formData: {
@@ -49,6 +62,9 @@ export default {
       const data = await getUserDetailById(this.userId)
       console.log(data)
       this.formData = data
+    },
+    async updateAccount() {
+      await saveUserDetailById({ ...this.formData, password: this.formData.newPassword })
     }
   }
 }
