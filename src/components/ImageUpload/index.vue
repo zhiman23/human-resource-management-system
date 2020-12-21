@@ -21,6 +21,10 @@
 </template>
 
 <script>
+import COS from 'cos-js-sdk-v5'
+import { cloudConfig } from '@/private-config'
+const cos = new COS(cloudConfig)
+
 export default {
   data() {
     return {
@@ -72,7 +76,6 @@ export default {
       // params.file
       console.log(params.file)
     }
-
   }
 }
 </script>
