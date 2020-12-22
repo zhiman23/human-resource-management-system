@@ -29,7 +29,10 @@
               <el-table-column label="操作">
                 <template slot-scope="scope">
                   <!-- 编辑角色弹出窗口按钮 -->
-                  <el-button type="text" @click="editPerm(scope.row.id)">分配权限</el-button>
+                  <el-button
+                    type="text"
+                    @click="editPerm(scope.row.id)"
+                  >分配权限</el-button>
                   <el-button type="text" @click="editRole(scope.row.id)">
                     编辑角色
                   </el-button>
@@ -103,7 +106,12 @@
         </el-tabs>
       </el-card>
       <!-- 编辑/新增的弹窗 -->
-      <el-dialog :title="dialogTitle" :visible.sync="showDialog" width="50%" @close="btnCancel">
+      <el-dialog
+        :title="dialogTitle"
+        :visible.sync="showDialog"
+        width="50%"
+        @close="btnCancel"
+      >
         <el-form
           ref="roleForm"
           label-width="80px"
@@ -125,7 +133,15 @@
       </el-dialog>
 
       <el-dialog title="编辑权限" :visible="showPermDialog">
-        编辑权限
+        <el-tree
+          node-key="id"
+          :default-checked-keys="selectCheck"
+          :data="permList"
+          :props="{ label: 'name' }"
+          :default-expand-all="true"
+          :show-checkbox="true"
+          :check-strictly="true"
+        />
       </el-dialog>
     </div>
   </div>
