@@ -39,6 +39,8 @@
             v-model="formData.enVisible"
             active-color="#5889fe"
             inactive-color="#e4e4e4"
+            active-value="1"
+            inactive-value="0"
           />
         </el-form-item>
       </el-form>
@@ -51,7 +53,7 @@
 </template>
 
 <script>
-import { getPermissionList } from '@/api/permission'
+import { getPermissionList, addPermission } from '@/api/permission'
 import { convertTreeData } from '@/utils'
 export default {
   data() {
@@ -83,7 +85,12 @@ export default {
       this.showDialog = true
     },
     btnOk() {
-      console.log(this.formData)
+      // console.log(this.formData)
+      const data = addPermission(this.formData)
+      console.log(data)
+      this.showDialog = false
+      this.$message.success('添加成功')
+      this.getPermissionList()
     }
   }
 }
