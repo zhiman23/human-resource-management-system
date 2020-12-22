@@ -32,13 +32,21 @@
                 type="text"
                 @click="editPermission(row.id)"
               >编辑</el-button>
-              <el-button type="text" @click="delPermission(row.id)">删除</el-button>
+              <el-button
+                type="text"
+                @click="delPermission(row.id)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
     </div>
-    <el-dialog :destroy-on-close="true" :title="titleDialog" :visible="showDialog" @close="btnCancel">
+    <el-dialog
+      :destroy-on-close="true"
+      :title="titleDialog"
+      :visible="showDialog"
+      @close="btnCancel"
+    >
       <el-form label-width="80px">
         <el-form-item label="权限名称">
           <el-input v-model="formData.name" />

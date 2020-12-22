@@ -29,6 +29,7 @@
               <el-table-column label="操作">
                 <template slot-scope="scope">
                   <!-- 编辑角色弹出窗口按钮 -->
+                  <el-button type="text" @click="editPerm(scope.row.id)">分配权限</el-button>
                   <el-button type="text" @click="editRole(scope.row.id)">
                     编辑角色
                   </el-button>
@@ -122,6 +123,10 @@
           <el-button type="primary" @click="btnOk">确认</el-button>
         </template>
       </el-dialog>
+
+      <el-dialog title="编辑权限" :visible="showPermDialog">
+        编辑权限
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -141,6 +146,7 @@ export default {
   data() {
     return {
       showDialog: false,
+      showPermDialog: false,
       activeName: 'role',
       roleList: [],
       pageSetting: {
@@ -259,6 +265,9 @@ export default {
     sizeChange(newPagesize) {
       this.pageSetting.pagesize = newPagesize
       this.getRoleList()
+    },
+    editPerm(id) {
+      this.showPermDialog = true
     }
   }
 }
