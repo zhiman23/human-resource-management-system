@@ -38,7 +38,7 @@
         </el-table>
       </el-card>
     </div>
-    <el-dialog title="添加权限" :visible="showDialog">
+    <el-dialog :destroy-on-close="true" :title="titleDialog" :visible="showDialog" @close="btnCancel">
       <el-form label-width="80px">
         <el-form-item label="权限名称">
           <el-input v-model="formData.name" />
@@ -61,7 +61,7 @@
       </el-form>
       <el-row type="flex" justify="center">
         <el-button type="primary" @click="btnOk">确认</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="btnCancel">取消</el-button>
       </el-row>
     </el-dialog>
   </div>
@@ -88,6 +88,11 @@ export default {
         pid: ''
       },
       showDialog: false
+    }
+  },
+  computed: {
+    titleDialog() {
+      return this.formData.id ? '编辑权限' : '添加权限'
     }
   },
   created() {
@@ -119,6 +124,20 @@ export default {
       this.showDialog = false
       this.$message.success(this.formData.id ? '编辑成功' : '新增成功')
       this.getPermissionList()
+    },
+    btnCancel() {
+      // 1. 清空数据
+      this.formData = {
+        enVisible: '',
+        name: '',
+        code: '',
+        description: '',
+        type: 1,
+        pid: ''
+      }
+      // 2. 如果有则清空校验
+      // 3. 关闭弹窗
+      this.showDialog = false
     }
   }
 }
