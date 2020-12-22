@@ -80,7 +80,11 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small" @click="editRole">角色</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="editRole(row.id)"
+              >角色</el-button>
               <el-button
                 type="text"
                 size="small"
@@ -103,8 +107,16 @@
       </el-card>
       <!-- sync同步 -->
       <AddEmployee :show-dialog.sync="showDialog" @addEmployee="getUserList" />
-      <AssignRole :show-role-dialog="showRoleDialog" />
-      <el-dialog title="二维码" :visible.sync="showCodeDialog" @opened="showQRcode">
+      <AssignRole
+        ref="editRole"
+        :show-role-dialog.sync="showRoleDialog"
+        :user-id="userId"
+      />
+      <el-dialog
+        title="二维码"
+        :visible.sync="showCodeDialog"
+        @opened="showQRcode"
+      >
         <el-row type="flex" justify="center">
           <canvas ref="myCanvas" />
           <!-- {{ imageUrl }} -->
@@ -119,6 +131,7 @@ import QRcode from 'qrcode'
 import { formatDate } from '@/filters'
 import { delEmployee, getUserList } from '@/api/employees'
 import EmploymentEnum from '@/api/constant/employees'
+
 import AddEmployee from './componts/add-employee'
 import AssignRole from './componts/assign-role'
 
@@ -131,6 +144,7 @@ export default {
     return {
       showRoleDialog: false,
       showCodeDialog: false,
+      userId: '',
       imageUrl: '',
       showDialog: false,
       // list:接数据
@@ -147,6 +161,7 @@ export default {
   },
   methods: {
     async editRole(userId) {
+      console.log(this.userId)
       this.userId = userId
       await this.$refs.editRole.getUserDetailById(this.userId)
       this.showRoleDialog = true
