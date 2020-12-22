@@ -39,6 +39,9 @@ Vue.directive('imageerror', imageerror)
 import Components from '@/components'
 Vue.use(Components)
 
+import Print from 'vue-print-nb'
+Vue.use(Print)
+
 Vue.config.productionTip = false
 
 // 资源过滤器

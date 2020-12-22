@@ -80,7 +80,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="editRole">角色</el-button>
               <el-button
                 type="text"
                 size="small"
@@ -103,6 +103,7 @@
       </el-card>
       <!-- sync同步 -->
       <AddEmployee :show-dialog.sync="showDialog" @addEmployee="getUserList" />
+      <AssignRole :show-role-dialog="showRoleDialog" />
       <el-dialog title="二维码" :visible.sync="showCodeDialog" @opened="showQRcode">
         <el-row type="flex" justify="center">
           <canvas ref="myCanvas" />
@@ -114,19 +115,21 @@
 </template>
 
 <script>
+import QRcode from 'qrcode'
+import { formatDate } from '@/filters'
 import { delEmployee, getUserList } from '@/api/employees'
 import EmploymentEnum from '@/api/constant/employees'
 import AddEmployee from './componts/add-employee'
-import { formatDate } from '@/filters'
-import employeesEnum from '@/api/constant/employees'
-import QRcode from 'qrcode'
+import AssignRole from './componts/assign-role'
 
 export default {
   components: {
-    AddEmployee
+    AddEmployee,
+    AssignRole
   },
   data() {
     return {
+      showRoleDialog: false,
       showCodeDialog: false,
       imageUrl: '',
       showDialog: false,
@@ -143,6 +146,11 @@ export default {
     this.getUserList()
   },
   methods: {
+    async editRole(userId) {
+      this.userId = userId
+      await this.$refs.editRole.getUserDetailById(this.userId)
+      this.showRoleDialog = true
+    },
     popCode(url) {
       this.showCodeDialog = true
       this.imageUrl = url
@@ -198,7 +206,7 @@ export default {
         }
         // 如果是聘用形式的数据. 去全局枚举中找到对应的值替换回来
         if (enKey === 'formOfEmployment') {
-          const obj = employeesEnum.hireType.find((item) => item.id === value)
+          const obj = EmploymentEnum.hireType.find((item) => item.id === value)
           value = obj ? obj.value : '不确定的临时工'
         }
         // 推入数组
