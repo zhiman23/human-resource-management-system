@@ -4,8 +4,16 @@
       <PageTools :show-before="true">
         <span slot="before">共166条记录</span>
         <template slot="after">
-          <el-button size="small" type="warning" @click="$router.push('/import?type=employee')">导入</el-button>
-          <el-button size="small" type="danger" @click="exportData">导出</el-button>
+          <el-button
+            size="small"
+            type="warning"
+            @click="$router.push('/import?type=employee')"
+          >导入</el-button>
+          <el-button
+            size="small"
+            type="danger"
+            @click="exportData"
+          >导出</el-button>
           <el-button
             size="small"
             type="primary"
@@ -21,8 +29,23 @@
             }}</template>
           </el-table-column>
           <el-table-column label="头像">
-            <template slot-scope="{row}">
-              <img v-imageerror="require('@/assets/common/head.jpg')" :src="row.staffPhoto" alt="" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px">
+            <template slot-scope="{ row }">
+              <img
+                v-imageerror="require('@/assets/common/head.jpg')"
+                :src="row.staffPhoto"
+                alt=""
+                style="
+                  border-radius: 50%;
+                  width: 100px;
+                  height: 100px;
+                  padding: 10px;
+                "
+                @click="
+                  row.staffPhoto
+                    ? popCode(row.staffPhoto)
+                    : (showCodeDialog = false)
+                "
+              >
             </template>
           </el-table-column>
           <el-table-column label="姓名" prop="username" sortable="" />
@@ -41,12 +64,19 @@
           </el-table-column>
           <el-table-column label="账户状态" sortable="">
             <template slot-scope="{ row }">
-              <el-switch :value="row.enableState === 1" active-color="#13ce66" />
+              <el-switch
+                :value="row.enableState === 1"
+                active-color="#13ce66"
+              />
             </template>
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template slot-scope="{ row }">
-              <el-button type="text" size="small" @click="$router.push('/employees/detail/' + row.id)">查看</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="$router.push('/employees/detail/' + row.id)"
+              >查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
@@ -73,6 +103,12 @@
       </el-card>
       <!-- sync同步 -->
       <AddEmployee :show-dialog.sync="showDialog" @addEmployee="getUserList" />
+      <el-dialog title="二维码" :visible.sync="showCodeDialog" @opened="showQRcode">
+        <el-row type="flex" justify="center">
+          <canvas ref="myCanvas" />
+          <!-- {{ imageUrl }} -->
+        </el-row>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -83,6 +119,7 @@ import EmploymentEnum from '@/api/constant/employees'
 import AddEmployee from './componts/add-employee'
 import { formatDate } from '@/filters'
 import employeesEnum from '@/api/constant/employees'
+import QRcode from 'qrcode'
 
 export default {
   components: {
@@ -90,6 +127,8 @@ export default {
   },
   data() {
     return {
+      showCodeDialog: false,
+      imageUrl: '',
       showDialog: false,
       // list:接数据
       list: [],
@@ -104,16 +143,23 @@ export default {
     this.getUserList()
   },
   methods: {
-
+    popCode(url) {
+      this.showCodeDialog = true
+      this.imageUrl = url
+    },
+    showQRcode() {
+      // 转换并显示二维码
+      QRcode.toCanvas(this.$refs.myCanvas, this.imageUrl)
+    },
     async exportData() {
       const headersEnum = {
-        '姓名': 'username',
-        '手机号': 'mobile',
-        '入职日期': 'timeOfEntry',
-        '聘用形式': 'formOfEmployment',
-        '转正日期': 'correctionTime',
-        '工号': 'workNumber',
-        '部门': 'departmentName'
+        姓名: 'username',
+        手机号: 'mobile',
+        入职日期: 'timeOfEntry',
+        聘用形式: 'formOfEmployment',
+        转正日期: 'correctionTime',
+        工号: 'workNumber',
+        部门: 'departmentName'
       }
       const header = Object.keys(headersEnum)
       // 获取员工数据
@@ -124,7 +170,7 @@ export default {
       // 用引入的原 api 接口发送请求
       const { rows } = await getUserList(pageSetting)
       // 映射由对象组成的行数据，变成一个个员工数组
-      const data = rows.map(item => {
+      const data = rows.map((item) => {
         // 遍历时拿到一个个员工对象, 通过函数转成数组
         return this.obj2Array(item, headersEnum)
       })
@@ -152,7 +198,7 @@ export default {
         }
         // 如果是聘用形式的数据. 去全局枚举中找到对应的值替换回来
         if (enKey === 'formOfEmployment') {
-          const obj = employeesEnum.hireType.find(item => item.id === value)
+          const obj = employeesEnum.hireType.find((item) => item.id === value)
           value = obj ? obj.value : '不确定的临时工'
         }
         // 推入数组
