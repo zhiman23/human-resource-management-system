@@ -132,7 +132,7 @@
         </template>
       </el-dialog>
 
-      <el-dialog title="编辑权限" :visible="showPermDialog">
+      <el-dialog title="编辑权限" :visible="showPermDialog" @close="btnCancelPerm">
         <el-tree
           ref="permTree"
           node-key="id"
@@ -144,7 +144,7 @@
           :check-strictly="true"
         />
         <el-row slot="footer" type="flex" justify="center">
-          <el-button>取消</el-button>
+          <el-button @click="btnCancelPerm">取消</el-button>
           <el-button type="primary" @click="btnOkPerm">确认</el-button>
         </el-row>
       </el-dialog>
@@ -296,6 +296,10 @@ export default {
       }
       await assignPerm(data)
       this.$message.success('修改成功')
+      this.showPermDialog = false
+    },
+    btnCancelPerm() {
+      this.selectCheck = []
       this.showPermDialog = false
     },
     currentChange(newPage) {
