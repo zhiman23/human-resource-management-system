@@ -134,6 +134,7 @@
 
       <el-dialog title="编辑权限" :visible="showPermDialog">
         <el-tree
+          ref="permTree"
           node-key="id"
           :default-checked-keys="selectCheck"
           :data="permList"
@@ -142,6 +143,10 @@
           :show-checkbox="true"
           :check-strictly="true"
         />
+        <el-row slot="footer" type="flex" justify="center">
+          <el-button>取消</el-button>
+          <el-button type="primary" @click="btnOkPerm">确认</el-button>
+        </el-row>
       </el-dialog>
     </div>
   </div>
@@ -154,8 +159,11 @@ import {
   delRole,
   getRoleDetail,
   updateRole,
-  addRole
+  addRole,
+  assignPerm
 } from '@/api/setting'
+import { getPermissionList } from '@/api/permission'
+import { convertTreeData } from '@/utils'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -274,6 +282,22 @@ export default {
       this.$refs.roleForm.resetFields()
       this.showDialog = false
     },
+    async btnOkPerm() {
+      // 发送请求, 拿到两个东西,
+      // 1. 当前选中的角色id值
+      const id = this.roleId
+      // 2. 用户改掉的权限勾选数组
+      // console.log(this.selectCheck)
+      // console.log(this.$refs.permTree.getCheckedKeys())
+      const permIds = this.$refs.permTree.getCheckedKeys()
+      const data = {
+        id,
+        permIds
+      }
+      await assignPerm(data)
+      this.$message.success('修改成功')
+      this.showPermDialog = false
+    },
     currentChange(newPage) {
       this.pageSetting.page = newPage
       this.getRoleList()
@@ -282,7 +306,18 @@ export default {
       this.pageSetting.pagesize = newPagesize
       this.getRoleList()
     },
-    editPerm(id) {
+    async editPerm(id) {
+      // 加载总的权限数据
+      this.roleId = id
+      const data = await getPermissionList()
+
+      // 加载当前角色详情的并结构旧权限数据
+      const { permIds } = await getRoleDetail(id)
+      this.selectCheck = permIds
+
+      console.log(data)
+      console.log(convertTreeData(data, '0'))
+      this.permList = convertTreeData(data, '0')
       this.showPermDialog = true
     }
   }
