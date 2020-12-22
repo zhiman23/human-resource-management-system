@@ -32,7 +32,7 @@
                 type="text"
                 @click="editPermission(row.id)"
               >编辑</el-button>
-              <el-button type="text">删除</el-button>
+              <el-button type="text" @click="delPermission(row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -72,7 +72,8 @@ import {
   getPermissionList,
   addPermission,
   getPermissionDetail,
-  updatePermission
+  updatePermission,
+  delPermission
 } from '@/api/permission'
 import { convertTreeData } from '@/utils'
 export default {
@@ -112,6 +113,16 @@ export default {
     async editPermission(id) {
       this.formData = await getPermissionDetail(id)
       this.showDialog = true
+    },
+    async delPermission(id) {
+      try {
+        await this.$confirm('确认删除该权限', '提示')
+        await delPermission(id)
+        this.$message.success('删除成功')
+        this.getPermissionList()
+      } catch (error) {
+        console.log(error)
+      }
     },
     async btnOk() {
       let data
