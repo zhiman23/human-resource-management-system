@@ -4,19 +4,34 @@
       <!-- 头部工具 -->
       <PageTools>
         <template slot="after">
-          <el-button type="primary" @click="addPermission(1, '0')">新增权限</el-button>
+          <el-button
+            type="primary"
+            @click="addPermission(1, '0')"
+          >新增权限</el-button>
         </template>
       </PageTools>
       <!-- 主要内容 -->
       <el-card>
-        <el-table border :data="permissionList" row-key="id" :default-expand-all="true">
+        <el-table
+          border
+          :data="permissionList"
+          row-key="id"
+          :default-expand-all="true"
+        >
           <el-table-column label="权限名称" prop="name" width="160px" />
           <el-table-column align="center" label="权限标识" prop="code" />
           <el-table-column align="center" label="权限描述" prop="description" />
           <el-table-column align="center" label="操作">
-            <template slot-scope="{row}">
-              <el-button v-if="row.type === 1" type="text" @click="addPermission(2, row.id)">添加</el-button>
-              <el-button type="text" @click="editPermission(row.id)">编辑</el-button>
+            <template slot-scope="{ row }">
+              <el-button
+                v-if="row.type === 1"
+                type="text"
+                @click="addPermission(2, row.id)"
+              >添加</el-button>
+              <el-button
+                type="text"
+                @click="editPermission(row.id)"
+              >编辑</el-button>
               <el-button type="text">删除</el-button>
             </template>
           </el-table-column>
@@ -53,7 +68,12 @@
 </template>
 
 <script>
-import { getPermissionList, addPermission, getPermissionDetail } from '@/api/permission'
+import {
+  getPermissionList,
+  addPermission,
+  getPermissionDetail,
+  updatePermission
+} from '@/api/permission'
 import { convertTreeData } from '@/utils'
 export default {
   data() {
@@ -88,12 +108,16 @@ export default {
       this.formData = await getPermissionDetail(id)
       this.showDialog = true
     },
-    btnOk() {
-      // console.log(this.formData)
-      const data = addPermission(this.formData)
+    async btnOk() {
+      let data
+      if (this.formData.id) {
+        data = await updatePermission(this.formData)
+      } else {
+        data = await addPermission(this.formData)
+      }
       console.log(data)
       this.showDialog = false
-      this.$message.success('添加成功')
+      this.$message.success(this.formData.id ? '编辑成功' : '新增成功')
       this.getPermissionList()
     }
   }
@@ -101,5 +125,4 @@ export default {
 </script>
 
 <style>
-
 </style>
