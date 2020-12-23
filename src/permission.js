@@ -1,5 +1,7 @@
 import router from '@/router'
 import store from '@/store'
+
+import { asyncRoutes } from '@/router'
 // 引入进度条插件
 import NProgress from 'nprogress'
 // 引入进度条样式
@@ -7,7 +9,7 @@ import 'nprogress/nprogress.css'
 // 路由守卫
 const whiteList = ['/login', '/404']
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // 开启进度条
   NProgress.start()
   // 是否有token
@@ -20,9 +22,12 @@ router.beforeEach((to, from, next) => {
       // 判断vuex里面有没有数据
       if (!store.getters.userId) {
         // 获取用户信息
-        store.dispatch('user/getUserInfo')
+        await store.dispatch('user/getUserInfo')
+        router.addRoutes(asyncRoutes)
+        next(to.path)
+      } else {
+        next()
       }
-      next()
     }
   } else {
     // 是否在白名单

@@ -81,7 +81,7 @@ import salarysRouter from './modules/salarys'
 import settingRouter from './modules/setting'
 import socialRouter from './modules/social'
 
-const asyncRouters = [
+export const asyncRouters = [
   {
     path: '/test',
     component: Layout,
@@ -106,7 +106,7 @@ const asyncRouters = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...asyncRouters]
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()
