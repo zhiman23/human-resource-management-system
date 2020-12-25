@@ -1,6 +1,7 @@
 import { setToken, getToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 import { Message } from 'element-ui'
+import { resetRouter } from '@/router'
 
 export default {
   namespaced: true,
@@ -47,11 +48,19 @@ export default {
         ...dataUserDetail
       }
       context.commit('setUserInfo', userInfo)
+      // 之前仅仅获取完信息, 存入state,
+      // 现在因为其他的文件(路由守卫)需要用这个数据
+      return userInfo
     },
     logout(context) {
       const { commit } = context
       commit('removeToken')
       commit('removeUserInfo')
+      resetRouter()
+      // 重置菜单
+      commit('permission/setRoutes', [], {
+        root: true
+      })
     }
 
   }
