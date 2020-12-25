@@ -1,17 +1,19 @@
 <template>
   <div>
     <el-row type="flex" justify="end">
-      <el-select v-model="currentYear" size="mini" @change="changeDate">
-        <el-option v-for="(item, index) in yearList" :key="index" :value="item" :label="item+'年'" />
+      <el-select v-model="currentYear" size="small" style="width: 120px" @change="dateChange">
+        <el-option v-for="item in yearList" :key="item" :label="item" :value="item">{{ item }}</el-option>
       </el-select>
-      <el-select v-model="currentMonth" size="mini" @change="changeDate">
-        <el-option v-for="item in 12" :key="item" :value="item" :label="item+'月'" />
+      <el-select v-model="currentMonth" size="small" style="width: 120px;margin-left:10px" @change="dateChange">
+        <el-option v-for="item in 12" :key="item" :label="item" :value="item">{{ item }}</el-option>
       </el-select>
     </el-row>
     <el-calendar v-model="currentDate">
-      <template slot="dateCell" slot-scope="scope">
-        {{ scope.data.day | getDay }}
-        <span v-if="isRest(scope.date)" class="rest">休</span>
+      <template v-slot:dateCell="{ date, data }" class="content">
+        <div class="date-content">
+          <span class="text"> {{ data.day | getDay }}</span>
+          <span v-if="isWeek(date)" class="rest">休</span>
+        </div>
       </template>
     </el-calendar>
   </div>
@@ -20,8 +22,8 @@
 <script>
 export default {
   filters: {
-    getDay(val) {
-      const day = val.split('-')[2]
+    getDay(value) {
+      const day = value.split('-')[2]
       return day.startsWith('0') ? day.substr(1) : day
     }
   },
@@ -33,42 +35,75 @@ export default {
   },
   data() {
     return {
-      currentMonth: null,
-      currentYear: null,
+      currentMonth: null, // 当前月份
+      currentYear: null, // 当前年份
       currentDate: null,
       yearList: []
     }
   },
+  //   初始化事件
   created() {
-    // 获取默认的当前年份和当前月份
-    this.currentYear = this.startDate.getFullYear()
+    //    处理起始时间
+    // 组件要求起始时间必须是 周一开始 以一个月为开始
     this.currentMonth = this.startDate.getMonth() + 1
-    // 获取前后五年的年份数组
-    this.yearList = Array.from(Array(11), (val, index) => {
-      const now = new Date()
-      return index + now.getFullYear() - 5
-    })
+    this.currentYear = this.startDate.getFullYear()
+    // 根据当前的年 生成可选年份 前后各加5年
+    this.yearList = Array.from(Array(11), (value, index) => this.currentYear + index - 5)
+    // 计算 当年当月的第一个周一 再加上 四周之后的一个月月份
+    this.dateChange()
   },
   methods: {
-    changeDate() {
+    // 是否是休息日
+    isWeek(value) {
+      return value.getDay() === 6 || value.getDay() === 0
+    },
+    // 年月份改变之后
+    dateChange() {
       const year = this.currentYear
       const month = this.currentMonth
-      const dateStr = `${year}-${month}-1`
-      this.currentDate = new Date(dateStr)
-    },
-    isRest(date) {
-      // 固定双休
-      // return date.getDay() === 6 || date.getDay() === 0
-      // 如果是排班
-      // 就是后端给出休息的数据
-      const restDays = [3, 4, 9, 20, 26]
-      const currentDate = date.getDate()
-      return restDays.indexOf(currentDate) > -1
+      this.currentDate = new Date(`${year}-${month}-1`) // 以当前月的1号为起始
     }
   }
 }
 </script>
 
-<style>
+<style  lang="scss" scoped>
+ ::v-deep .el-calendar-day {
+  height:  auto;
+ }
+ ::v-deep .el-calendar-table__row td,::v-deep .el-calendar-table tr td:first-child,  ::v-deep .el-calendar-table__row td.prev{
+  border:none;
+ }
+.date-content {
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
+}
+.date-content .rest {
+  color: #fff;
+  border-radius: 50%;
+  background: rgb(250, 124, 77);
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  display: inline-block;
+  font-size: 12px;
+  margin-left: 10px;
+}
+.date-content .text{
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+ display: inline-block;
 
+}
+ ::v-deep .el-calendar-table td.is-selected .text{
+   background: #409eff;
+   color: #fff;
+   border-radius: 50%;
+ }
+ ::v-deep .el-calendar__header {
+   display: none
+ }
 </style>
