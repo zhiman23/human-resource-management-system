@@ -31,7 +31,14 @@ import '@/permission' // permission control
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
-Vue.use(ElementUI)
+import i18n from '@/i18n'
+
+Vue.use(ElementUI, {
+  // i18n 是一个属性, 可以传入一个函数, 自动获取到当前饿了么想要翻译的key
+  // 只需要在这个函数中返回, 对应的文字即可
+  i18n: (key) => i18n.t(key)
+})
+
 import { imageerror } from '@/directives'
 Vue.directive('imageerror', imageerror)
 
@@ -55,8 +62,6 @@ for (var key in filters) {
 // 全局混入
 import { checkPermissionMixin } from '@/mixin'
 Vue.mixin(checkPermissionMixin)
-
-import i18n from '@/i18n'
 
 new Vue({
   el: '#app',

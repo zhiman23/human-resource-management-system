@@ -43,7 +43,7 @@
             <span style="display: block">中文</span>
           </el-dropdown-item>
           <el-dropdown-item divided @click.native="setLang('en')">
-            <span style="display: block">英文</span>
+            <span style="display: block">English</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
