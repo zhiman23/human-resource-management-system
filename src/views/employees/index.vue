@@ -15,6 +15,7 @@
             @click="exportData"
           >导出</el-button>
           <el-button
+            :disabled="!checkPermission('POINT-USER-ADD')"
             size="small"
             type="primary"
             @click="showDialog = true"
@@ -81,6 +82,7 @@
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button
+                :disabled="!checkPermission('point-user-delete')"
                 type="text"
                 size="small"
                 @click="editRole(row.id)"
