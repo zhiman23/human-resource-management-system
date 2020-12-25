@@ -75,12 +75,14 @@ export default {
   border:none;
  }
 .date-content {
+  position: relative;
   height: 40px;
   text-align: center;
   line-height: 40px;
   font-size: 14px;
 }
 .date-content .rest {
+  position: absolute;
   color: #fff;
   border-radius: 50%;
   background: rgb(250, 124, 77);
@@ -89,7 +91,10 @@ export default {
   line-height: 20px;
   display: inline-block;
   font-size: 12px;
+  top: 11px;
+  right: -8px;
   margin-left: 10px;
+
 }
 .date-content .text{
   width: 20px;
