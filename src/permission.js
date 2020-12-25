@@ -1,7 +1,6 @@
 import router from '@/router'
 import store from '@/store'
 
-import { asyncRoutes } from '@/router'
 // 引入进度条插件
 import NProgress from 'nprogress'
 // 引入进度条样式
@@ -23,7 +22,9 @@ router.beforeEach(async(to, from, next) => {
       if (!store.getters.userId) {
         // 获取用户信息
         const { roles } = await store.dispatch('user/getUserInfo')
-        const myRoutes = await store.dispatch('permission/filterRoutes', roles)
+        const myRoutes = await store.dispatch('permission/filterRoutes', roles.menus)
+        console.log('hj')
+        console.log(roles, '1111')
         router.addRoutes(myRoutes)
         // store
         next(to.path)

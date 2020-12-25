@@ -30,6 +30,9 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+
+import userRouter from './modules/user'
+
 export const constantRoutes = [
   {
     path: '/login',
@@ -66,7 +69,8 @@ export const constantRoutes = [
         meta: { title: '导入 Excel' }
       }
     ]
-  }
+  },
+  userRouter
 
   // 404 page must be placed at the end !!!
   // { path: '*', redirect: '/404', hidden: true }
