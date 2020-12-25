@@ -12,10 +12,16 @@
     </div>
 
     <div class="right-menu">
+      <ThemePicker class="themepicker" />
       <FullScreen class="fullscreen" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img v-imageerror="defaultImg" :src="staffPhoto" alt="" class="user-avatar">
+          <img
+            v-imageerror="defaultImg"
+            :src="staffPhoto"
+            alt=""
+            class="user-avatar"
+          >
           <span class="name">{{ name }}</span>
           <i class="el-icon-caret-bottom" style="color: #fff" />
         </div>
@@ -44,12 +50,14 @@ import { mapGetters } from 'vuex'
 // import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import FullScreen from '@/components/FullScreen'
+import ThemePicker from '@/components/ThemePicker'
 
 export default {
   components: {
     // Breadcrumb,
     Hamburger,
-    FullScreen
+    FullScreen,
+    ThemePicker
   },
   data() {
     return {
@@ -76,7 +84,7 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
- background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
+  background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
@@ -105,13 +113,19 @@ export default {
       outline: none;
     }
 
-.fullscreen {
-        display: inline;
-        position: absolute;
-        right: 120px;
-        top: 5px;
-        color: #fff;
-      }
+    .fullscreen {
+      display: inline;
+      position: absolute;
+      right: 120px;
+      top: 5px;
+      color: #fff;
+    }
+
+    .themepicker {
+      position: absolute;
+      top: 16px;
+      right: 148px;
+    }
 
     .right-menu-item {
       display: inline-block;
@@ -147,12 +161,12 @@ export default {
           border-radius: 15px;
           vertical-align: middle;
         }
-        .name{
+        .name {
           color: #fff;
           vertical-align: middle;
           margin-left: 5px;
         }
-        .userdropdown{
+        .userdropdown {
           color: #fff;
         }
 
@@ -166,23 +180,23 @@ export default {
       }
     }
   }
-   .app-breadcrumb {
+  .app-breadcrumb {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 50px;
+    margin-left: 10px;
+    color: #ffffff;
+    cursor: text;
+    .breadBtn {
+      background: #84a9fe;
+      font-size: 14px;
+      padding: 0 10px;
       display: inline-block;
-      font-size: 18px;
-      line-height: 50px;
-      margin-left: 10px;
-      color: #ffffff;
-      cursor: text;
-      .breadBtn {
-        background: #84a9fe;
-        font-size: 14px;
-        padding: 0 10px;
-        display: inline-block;
-        height: 30px;
-        line-height: 30px;
-        border-radius: 10px;
-        margin-left: 15px;
-      }
+      height: 30px;
+      line-height: 30px;
+      border-radius: 10px;
+      margin-left: 15px;
     }
+  }
 }
 </style>
