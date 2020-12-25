@@ -8,12 +8,23 @@
         <el-option v-for="item in 12" :key="item" :value="item" :label="item+'月'" />
       </el-select>
     </el-row>
-    <el-calendar v-model="currentDate" />
+    <el-calendar v-model="currentDate">
+      <template slot="dateCell" slot-scope="scope">
+        {{ scope.data.day | getDay }}
+        <span v-if="isRest(scope.date)" class="rest">休</span>
+      </template>
+    </el-calendar>
   </div>
 </template>
 
 <script>
 export default {
+  filters: {
+    getDay(val) {
+      const day = val.split('-')[2]
+      return day.startsWith('0') ? day.substr(1) : day
+    }
+  },
   props: {
     startDate: {
       type: Date,
@@ -44,6 +55,15 @@ export default {
       const month = this.currentMonth
       const dateStr = `${year}-${month}-1`
       this.currentDate = new Date(dateStr)
+    },
+    isRest(date) {
+      // 固定双休
+      // return date.getDay() === 6 || date.getDay() === 0
+      // 如果是排班
+      // 就是后端给出休息的数据
+      const restDays = [3, 4, 9, 20, 26]
+      const currentDate = date.getDate()
+      return restDays.indexOf(currentDate) > -1
     }
   }
 }
