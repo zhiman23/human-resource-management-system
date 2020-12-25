@@ -52,6 +52,10 @@ for (var key in filters) {
   Vue.filter(filterName, filterFunction)
 }
 
+// 全局混入
+import { checkPermissionMixin } from '@/mixin'
+Vue.mixin(checkPermissionMixin)
+
 new Vue({
   el: '#app',
   router,
