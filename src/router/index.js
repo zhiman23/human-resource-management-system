@@ -66,10 +66,10 @@ export const constantRoutes = [
         meta: { title: '导入 Excel' }
       }
     ]
-  },
+  }
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 import approvalsRouter from './modules/approvals'
@@ -81,7 +81,7 @@ import salarysRouter from './modules/salarys'
 import settingRouter from './modules/setting'
 import socialRouter from './modules/social'
 
-export const asyncRouters = [
+export const asyncRoutes = [
   {
     path: '/test',
     component: Layout,

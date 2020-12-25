@@ -22,8 +22,10 @@ router.beforeEach(async(to, from, next) => {
       // 判断vuex里面有没有数据
       if (!store.getters.userId) {
         // 获取用户信息
-        await store.dispatch('user/getUserInfo')
-        router.addRoutes(asyncRoutes)
+        const { roles } = await store.dispatch('user/getUserInfo')
+        const myRoutes = await store.dispatch('permission/filterRoutes', roles)
+        router.addRoutes(myRoutes)
+        // store
         next(to.path)
       } else {
         next()
