@@ -56,9 +56,12 @@ for (var key in filters) {
 import { checkPermissionMixin } from '@/mixin'
 Vue.mixin(checkPermissionMixin)
 
+import i18n from '@/i18n'
+
 new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })
