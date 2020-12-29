@@ -55,13 +55,13 @@
         class="loginBtn"
         :loading="loading"
         type="primary"
-        style="width: 100%; margin-bottom: 30px"
+        style="width: 100%; margin-bottom: 30px;font-family:楷体"
         @click.native.prevent="handleLogin"
       >登录</el-button>
 
       <div class="tips">
-        <span style="margin-right: 20px">账号: 13800000002</span>
-        <span> 密码: 123456</span>
+        <span style="margin-right: 20px">默认账号: 13800000002</span>
+        <span> 默认密码: 123456</span>
       </div>
     </el-form>
   </div>
@@ -159,7 +159,7 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
-  background-image: url("~@/assets/common/yue.jpg");
+  background-image: url("~@/assets/common/guang.jpeg");
   background-position: center;
   //背景图片铺满全显
   background-size: cover;
@@ -201,6 +201,7 @@ $cursor: #fff;
     height: 64px;
     line-height: 32px;
     font-size: 24px;
+    border-radius: 32px;
   }
 }
 </style>
@@ -220,12 +221,13 @@ $light_gray: #eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 200px 35px 0;
     margin: 0 auto;
     overflow: hidden;
   }
 
   .tips {
+    text-align: center;
     font-size: 14px;
     color: #fff;
     margin-bottom: 10px;
