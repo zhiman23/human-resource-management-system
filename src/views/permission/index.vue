@@ -47,20 +47,20 @@
       :visible="showDialog"
       @close="btnCancel"
     >
-      <el-form label-width="80px">
-        <el-form-item label="权限名称">
+      <el-form :rules="rules" label-width="80px">
+        <el-form-item label="权限名称" prop="name">
           <el-input v-model="formData.name" />
         </el-form-item>
-        <el-form-item label="权限标识">
+        <el-form-item label="权限标识" prop="code">
           <el-input v-model="formData.code" />
         </el-form-item>
-        <el-form-item label="权限描述">
+        <el-form-item label="权限描述" prop="description">
           <el-input v-model="formData.description" />
         </el-form-item>
         <el-form-item label="激活状态">
           <el-switch
             v-model="formData.enVisible"
-            active-color="#5889fe"
+            active-color="#13ce66"
             inactive-color="#e4e4e4"
             active-value="1"
             inactive-value="0"
@@ -96,35 +96,14 @@ export default {
         type: 1,
         pid: ''
       },
-      // rules: {
-      //   name: [
-      //     { required: true, message: '部门名称不能为空', trigger: 'blur' },
-      //     {
-      //       min: 1,
-      //       max: 50,
-      //       message: '部门名称要求1-50个字符',
-      //       trigger: 'blur'
-      //     },
-      //     { trigger: 'blur', validator: validateDeptsName }
-      //   ],
-      //   code: [
-      //     { required: true, message: '部门编码不能为空', trigger: 'blur' },
-      //     {
-      //       min: 1,
-      //       max: 50,
-      //       message: '部门编码要求1-50个字符',
-      //       trigger: 'blur'
-      //     },
-      //     { trigger: 'blur', validator: validateDeptsCode }
-      //   ],
-      //   manager: [
-      //     { required: true, message: '部门负责人不能为空', trigger: 'change' }
-      //   ],
-      //   introduce: [
-      //     { required: true, message: '介绍不能为空', trigger: 'blur' },
-      //     { min: 1, max: 300, message: '介绍要求1-300个字符', trigger: 'blur' }
-      //   ]
-      // },
+      rules: {
+        name: [
+          { required: true, message: '请输入权限名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        code: [{ required: true, message: '权限标识不能为空', trigger: 'blur' }],
+        description: [{ required: true, message: '权限描述不能为空', trigger: 'blur' }]
+      },
       showDialog: false
     }
   },
